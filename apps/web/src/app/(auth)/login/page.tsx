@@ -200,14 +200,8 @@ function LoginForm() {
           </form>
 
           <p className="text-center text-sm text-gray-500">
-            Nao tem acesso? Fale com o administrador da sua franquia.
+            Nao tem acesso? Fale com o consultor da sua Franquia.
           </p>
-
-          <div className="text-center text-xs text-gray-600 mt-4">
-            <p>Usuarios de teste:</p>
-            <p>admin@motochefe.com.br / 123456</p>
-            <p>joao@motochefe.com.br / 123456</p>
-          </div>
         </div>
       </div>
     </div>
