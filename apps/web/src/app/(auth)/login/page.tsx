@@ -127,9 +127,9 @@ function LoginForm() {
                   className="text-4xl font-bold"
                   style={{ color: primaryColor }}
                 >
-                  MotoChefe
+                  Universidade
                 </h1>
-                <h2 className="mt-2 text-2xl font-semibold text-white">Universidade</h2>
+                <h2 className="mt-2 text-2xl font-semibold text-white">MotoChefe</h2>
               </>
             )}
             <p className="mt-4 text-gray-400">
