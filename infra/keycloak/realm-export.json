@@ -1,0 +1,249 @@
+{
+  "id": "motochefe",
+  "realm": "motochefe",
+  "displayName": "Universidade MotoChefe",
+  "displayNameHtml": "<div class=\"kc-logo-text\"><span>Universidade MotoChefe</span></div>",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "permanentLockout": false,
+  "maxFailureWaitSeconds": 900,
+  "minimumQuickLoginWaitSeconds": 60,
+  "waitIncrementSeconds": 60,
+  "quickLoginCheckMilliSeconds": 1000,
+  "maxDeltaTimeSeconds": 43200,
+  "failureFactor": 5,
+  "defaultRoles": [
+    "learner"
+  ],
+  "requiredCredentials": [
+    "password"
+  ],
+  "passwordPolicy": "length(8) and notUsername",
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Administrador",
+      "lastName": "Sistema",
+      "email": "admin@motochefe.com.br",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "admin123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "super_admin"
+      ],
+      "attributes": {
+        "franchise_id": ["franchise-matriz"],
+        "cargo": ["proprietario"]
+      }
+    },
+    {
+      "username": "joao",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "João",
+      "lastName": "Silva",
+      "email": "joao@motochefe.com.br",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "joao123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "learner"
+      ],
+      "attributes": {
+        "franchise_id": ["franchise-matriz"],
+        "store_id": ["store-1"],
+        "cargo": ["mecanico"]
+      }
+    },
+    {
+      "username": "maria",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Maria",
+      "lastName": "Santos",
+      "email": "maria@motochefe.com.br",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "maria123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "learner"
+      ],
+      "attributes": {
+        "franchise_id": ["franchise-matriz"],
+        "store_id": ["store-2"],
+        "cargo": ["atendente"]
+      }
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "super_admin",
+        "description": "Administrador geral da plataforma"
+      },
+      {
+        "name": "franchise_admin",
+        "description": "Administrador de franquia"
+      },
+      {
+        "name": "store_manager",
+        "description": "Gerente de loja"
+      },
+      {
+        "name": "learner",
+        "description": "Colaborador/Aluno"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "web-portal",
+      "name": "Portal Web",
+      "description": "Portal de aprendizado Next.js",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:3000/*",
+        "https://*.motochefe.com.br/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000",
+        "https://*.motochefe.com.br"
+      ],
+      "protocol": "openid-connect",
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "defaultClientScopes": [
+        "web-origins",
+        "profile",
+        "roles",
+        "email",
+        "motochefe-scope"
+      ]
+    },
+    {
+      "clientId": "api-backend",
+      "name": "API Backend",
+      "description": "API NestJS",
+      "enabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "secret": "super-secret-api-key",
+      "protocol": "openid-connect",
+      "defaultClientScopes": [
+        "profile",
+        "roles",
+        "email",
+        "motochefe-scope"
+      ]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "motochefe-scope",
+      "description": "Custom scope com claims MotoChefe",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "false"
+      },
+      "protocolMappers": [
+        {
+          "name": "franchise_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "franchise_id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "franchise_id",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "store_id",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "store_id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "store_id",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "cargo",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "cargo",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "cargo",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    }
+  ],
+  "browserSecurityHeaders": {
+    "contentSecurityPolicyReportOnly": "",
+    "xContentTypeOptions": "nosniff",
+    "xRobotsTag": "none",
+    "xFrameOptions": "SAMEORIGIN",
+    "xXSSProtection": "1; mode=block",
+    "strictTransportSecurity": "max-age=31536000; includeSubDomains"
+  },
+  "smtpServer": {},
+  "internationalizationEnabled": true,
+  "supportedLocales": [
+    "pt-BR",
+    "en"
+  ],
+  "defaultLocale": "pt-BR",
+  "accessTokenLifespan": 28800,
+  "accessTokenLifespanForImplicitFlow": 900,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "offlineSessionMaxLifespanEnabled": false,
+  "offlineSessionMaxLifespan": 5184000,
+  "accessCodeLifespan": 60,
+  "accessCodeLifespanUserAction": 300,
+  "accessCodeLifespanLogin": 1800,
+  "actionTokenGeneratedByAdminLifespan": 43200,
+  "actionTokenGeneratedByUserLifespan": 300
+}

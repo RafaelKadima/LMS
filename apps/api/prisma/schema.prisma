@@ -1,0 +1,386 @@
+// ===========================================
+// Universidade MotoChefe - Prisma Schema
+// ===========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===========================================
+// Enums
+// ===========================================
+
+enum UserRole {
+  super_admin
+  franchise_admin
+  store_manager
+  learner
+}
+
+enum Cargo {
+  mecanico
+  atendente
+  gerente
+  proprietario
+}
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+enum LessonType {
+  video
+  document
+  quiz
+  scorm
+}
+
+enum EnrollmentStatus {
+  active
+  completed
+  expired
+  cancelled
+}
+
+enum VideoProcessingStatus {
+  pending
+  processing
+  completed
+  failed
+}
+
+enum XAPIEventStatus {
+  pending
+  sent
+  failed
+}
+
+// ===========================================
+// Franchise & Store
+// ===========================================
+
+model Franchise {
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String   @unique
+  slug      String   @unique
+  logoUrl   String?  @map("logo_url")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  stores  Store[]
+  users   User[]
+  courses Course[]
+  tracks  Track[]
+
+  @@map("franchises")
+}
+
+model Store {
+  id          String   @id @default(uuid())
+  franchiseId String   @map("franchise_id")
+  name        String
+  address     String?
+  city        String?
+  state       String?
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  franchise Franchise @relation(fields: [franchiseId], references: [id])
+  users     User[]
+
+  @@index([franchiseId])
+  @@map("stores")
+}
+
+// ===========================================
+// Users
+// ===========================================
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  franchiseId  String   @map("franchise_id")
+  storeId      String?  @map("store_id")
+  cargo        Cargo
+  role         UserRole @default(learner)
+  avatarUrl    String?  @map("avatar_url")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  franchise      Franchise        @relation(fields: [franchiseId], references: [id])
+  store          Store?           @relation(fields: [storeId], references: [id])
+  enrollments    Enrollment[]
+  lessonProgress LessonProgress[]
+  badgeAwards    BadgeAward[]
+  xapiEvents     XAPIEvent[]
+
+  @@index([franchiseId])
+  @@index([storeId])
+  @@map("users")
+}
+
+// ===========================================
+// Courses & Content
+// ===========================================
+
+model Course {
+  id              String       @id @default(uuid())
+  franchiseId     String?      @map("franchise_id") // null = global
+  title           String
+  description     String
+  thumbnailUrl    String?      @map("thumbnail_url")
+  status          CourseStatus @default(draft)
+  targetCargos    Cargo[]      @map("target_cargos")
+  isRequired      Boolean      @default(false) @map("is_required")
+  durationMinutes Int          @default(0) @map("duration_minutes")
+  order           Int          @default(0)
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  franchise   Franchise?   @relation(fields: [franchiseId], references: [id])
+  modules     Module[]
+  enrollments Enrollment[]
+  trackItems  TrackItem[]
+
+  @@index([franchiseId])
+  @@index([status])
+  @@map("courses")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  courseId    String   @map("course_id")
+  title       String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@index([courseId])
+  @@map("modules")
+}
+
+model Lesson {
+  id               String                 @id @default(uuid())
+  moduleId         String                 @map("module_id")
+  title            String
+  description      String?
+  type             LessonType             @default(video)
+  durationSeconds  Int                    @default(0) @map("duration_seconds")
+  order            Int                    @default(0)
+  // Video specific
+  videoUrl         String?                @map("video_url") // Original
+  manifestUrl      String?                @map("manifest_url") // HLS master.m3u8
+  thumbnailUrl     String?                @map("thumbnail_url")
+  processingStatus VideoProcessingStatus? @map("processing_status")
+  // Document specific (quando type = document)
+  documentUrl      String?                @map("document_url")
+  // Materiais de apoio (disponível para qualquer tipo de aula)
+  // Formato: [{ url: string, thumbnailUrl?: string, fileName: string, mimeType: string, size?: number }]
+  supportMaterials   Json                 @default("[]") @map("support_materials")
+  createdAt        DateTime               @default(now()) @map("created_at")
+  updatedAt        DateTime               @updatedAt @map("updated_at")
+
+  module   Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@index([moduleId])
+  @@map("lessons")
+}
+
+// ===========================================
+// Tracks (Trilhas)
+// ===========================================
+
+model Track {
+  id           String   @id @default(uuid())
+  franchiseId  String?  @map("franchise_id")
+  title        String
+  description  String?
+  thumbnailUrl String?  @map("thumbnail_url")
+  targetCargos Cargo[]  @map("target_cargos")
+  isRequired   Boolean  @default(false) @map("is_required")
+  order        Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  franchise Franchise?  @relation(fields: [franchiseId], references: [id])
+  items     TrackItem[]
+
+  @@index([franchiseId])
+  @@map("tracks")
+}
+
+model TrackItem {
+  id       String @id @default(uuid())
+  trackId  String @map("track_id")
+  courseId String @map("course_id")
+  order    Int    @default(0)
+
+  track  Track  @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([trackId, courseId])
+  @@index([trackId])
+  @@map("track_items")
+}
+
+// ===========================================
+// Enrollments & Progress
+// ===========================================
+
+model Enrollment {
+  id          String           @id @default(uuid())
+  userId      String           @map("user_id")
+  courseId    String           @map("course_id")
+  status      EnrollmentStatus @default(active)
+  progress    Int              @default(0) // 0-100
+  startedAt   DateTime         @default(now()) @map("started_at")
+  completedAt DateTime?        @map("completed_at")
+  expiresAt   DateTime?        @map("expires_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id                  String    @id @default(uuid())
+  userId              String    @map("user_id")
+  lessonId            String    @map("lesson_id")
+  lastPositionSeconds Int       @default(0) @map("last_position_seconds")
+  secondsWatched      Int       @default(0) @map("seconds_watched")
+  percentComplete     Int       @default(0) @map("percent_complete") // 0-100
+  completedAt         DateTime? @map("completed_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId])
+  @@index([lessonId])
+  @@map("lesson_progress")
+}
+
+// ===========================================
+// Gamification
+// ===========================================
+
+model Badge {
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  imageUrl     String   @map("image_url")
+  criteriaJson Json     @map("criteria_json") // BadgeCriteria type
+  points       Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  awards BadgeAward[]
+
+  @@map("badges")
+}
+
+model BadgeAward {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  badgeId   String   @map("badge_id")
+  awardedAt DateTime @default(now()) @map("awarded_at")
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId])
+  @@index([userId])
+  @@map("badge_awards")
+}
+
+// ===========================================
+// xAPI Events Outbox
+// ===========================================
+
+model XAPIEvent {
+  id            String          @id @default(uuid())
+  userId        String          @map("user_id")
+  statementJson Json            @map("statement_json")
+  status        XAPIEventStatus @default(pending)
+  attempts      Int             @default(0)
+  lastAttemptAt DateTime?       @map("last_attempt_at")
+  sentAt        DateTime?       @map("sent_at")
+  errorMessage  String?         @map("error_message")
+  createdAt     DateTime        @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("xapi_events")
+}
+
+// ===========================================
+// Video Processing Queue
+// ===========================================
+
+model VideoJob {
+  id          String                @id @default(uuid())
+  lessonId    String                @map("lesson_id")
+  sourceUrl   String                @map("source_url")
+  status      VideoProcessingStatus @default(pending)
+  progress    Int                   @default(0) // 0-100
+  errorMsg    String?               @map("error_msg")
+  startedAt   DateTime?             @map("started_at")
+  completedAt DateTime?             @map("completed_at")
+  createdAt   DateTime              @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([lessonId])
+  @@map("video_jobs")
+}
+
+// ===========================================
+// System Settings (Personalização)
+// ===========================================
+
+model SystemSettings {
+  id              String   @id @default("default")
+
+  // Cores do tema
+  primaryColor    String   @default("#f97316") @map("primary_color")
+  secondaryColor  String   @default("#141414") @map("secondary_color")
+
+  // Login background
+  loginBgType     String   @default("color") @map("login_bg_type") // "color" | "image" | "video"
+  loginBgColor    String   @default("#141414") @map("login_bg_color")
+  loginBgMediaUrl String?  @map("login_bg_media_url")
+
+  // Logo
+  logoUrl         String?  @map("logo_url")
+
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
+}

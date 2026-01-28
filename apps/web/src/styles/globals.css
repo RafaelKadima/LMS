@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 20, 20, 20;
+  --background-end-rgb: 20, 20, 20;
+
+  /* Cores dinâmicas do tema */
+  --color-brand: #f97316;
+  --color-surface-dark: #141414;
+  --color-surface-card: #1f1f1f;
+  --color-surface-hover: #2a2a2a;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* Video.js customization */
+.video-js {
+  font-family: inherit;
+}
+
+.video-js .vjs-big-play-button {
+  background-color: color-mix(in srgb, var(--color-brand) 80%, transparent);
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 48px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.video-js .vjs-big-play-button:hover {
+  background-color: var(--color-brand);
+}
+
+.video-js .vjs-control-bar {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+.video-js .vjs-progress-control .vjs-play-progress {
+  background-color: var(--color-brand);
+}
+
+.video-js .vjs-slider:hover {
+  color: var(--color-brand);
+}
+
+/* Netflix-style cards */
+.course-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Progress bar */
+.progress-bar {
+  height: 4px;
+  background: #3a3a3a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-brand);
+  transition: width 0.3s ease;
+}

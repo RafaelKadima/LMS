@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+.next/
+.turbo/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+._*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
+
+# Prisma
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+
+# Uploads (keep structure)
+apps/web/public/uploads/settings/*
+!apps/web/public/uploads/settings/.gitkeep
+apps/web/public/uploads/lessons/*
+!apps/web/public/uploads/lessons/.gitkeep
+
+# Misc
+*.tsbuildinfo
+# Claude settings
+.claude/
+*.png

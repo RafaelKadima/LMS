@@ -1,0 +1,56 @@
+{
+  "name": "universidade-motochefe",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma LXP/LMS corporativa para franquias MotoChefe",
+  "author": "MotoChefe",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "db:generate": "pnpm --filter @motochefe/api prisma generate",
+    "db:migrate": "pnpm --filter @motochefe/api prisma migrate deploy",
+    "db:migrate:dev": "pnpm --filter @motochefe/api prisma migrate dev",
+    "db:push": "pnpm --filter @motochefe/api prisma db push",
+    "db:seed": "pnpm --filter @motochefe/api prisma db seed",
+    "db:studio": "pnpm --filter @motochefe/api prisma studio",
+    "db:reset": "pnpm --filter @motochefe/api prisma migrate reset",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f",
+    "docker:dev": "docker compose --profile dev up -d",
+    "docker:all": "docker compose --profile dev --profile lrs --profile bi up -d",
+    "setup": "pnpm install && pnpm docker:up && pnpm db:migrate && pnpm db:seed",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.2.0",
+    "turbo": "^1.11.3",
+    "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "**/*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

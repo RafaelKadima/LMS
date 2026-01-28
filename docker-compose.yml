@@ -1,0 +1,231 @@
+version: '3.8'
+
+services:
+  # ===========================================
+  # PostgreSQL - Banco de dados principal
+  # ===========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: motochefe-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-motochefe}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-motochefe123}
+      POSTGRES_DB: ${POSTGRES_DB:-universidade}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-motochefe} -d ${POSTGRES_DB:-universidade}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - motochefe-network
+
+  # ===========================================
+  # Redis - Cache e Filas (BullMQ)
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    container_name: motochefe-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - motochefe-network
+
+  # ===========================================
+  # MongoDB - Para Learning Locker
+  # ===========================================
+  mongodb:
+    image: mongo:6
+    container_name: motochefe-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-motochefe}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-motochefe123}
+      MONGO_INITDB_DATABASE: learninglocker
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - motochefe-network
+
+  # ===========================================
+  # Learning Locker - LRS (xAPI)
+  # ===========================================
+  # NOTA: Learning Locker requer setup manual ou uso do deploy oficial
+  # Veja: https://github.com/LearningLocker/deploy
+  #
+  # Para desenvolvimento, podemos usar uma versão simplificada:
+  learninglocker-api:
+    image: learninglocker/learninglocker:latest
+    container_name: motochefe-lrs-api
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - MONGODB_PATH=mongodb://${MONGO_USER:-motochefe}:${MONGO_PASSWORD:-motochefe123}@mongodb:27017/learninglocker?authSource=admin
+      - API_HOST=0.0.0.0
+      - API_PORT=8081
+      - LOG_MIN_LEVEL=info
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - motochefe-network
+    profiles:
+      - lrs
+
+  learninglocker-ui:
+    image: learninglocker/learninglocker:latest
+    container_name: motochefe-lrs-ui
+    restart: unless-stopped
+    command: ["node", "ui/dist/server.js"]
+    environment:
+      - NODE_ENV=production
+      - MONGODB_PATH=mongodb://${MONGO_USER:-motochefe}:${MONGO_PASSWORD:-motochefe123}@mongodb:27017/learninglocker?authSource=admin
+      - UI_HOST=0.0.0.0
+      - UI_PORT=3030
+    ports:
+      - "3030:3030"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - motochefe-network
+    profiles:
+      - lrs
+
+  # ===========================================
+  # Metabase - Business Intelligence
+  # ===========================================
+  metabase:
+    image: metabase/metabase:latest
+    container_name: motochefe-metabase
+    restart: unless-stopped
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: ${POSTGRES_USER:-motochefe}
+      MB_DB_PASS: ${POSTGRES_PASSWORD:-motochefe123}
+      MB_DB_HOST: postgres
+      JAVA_TIMEZONE: America/Sao_Paulo
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - motochefe-network
+    profiles:
+      - bi
+
+  # ===========================================
+  # MailHog - Email testing (dev only)
+  # ===========================================
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: motochefe-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - motochefe-network
+    profiles:
+      - dev
+
+  # ===========================================
+  # MinIO - S3 compatible storage (dev only)
+  # Para desenvolvimento local sem Cloudflare R2
+  # ===========================================
+  minio:
+    image: minio/minio:latest
+    container_name: motochefe-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${R2_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${R2_SECRET_KEY:-minioadmin123}
+    ports:
+      - "9000:9000"   # API
+      - "9001:9001"   # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - motochefe-network
+    profiles:
+      - dev
+
+  # ===========================================
+  # Bull Board - UI para filas BullMQ
+  # ===========================================
+  bullboard:
+    image: addono/bull-board:latest
+    container_name: motochefe-bullboard
+    restart: unless-stopped
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_USE_TLS: false
+    ports:
+      - "3002:3000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - motochefe-network
+    profiles:
+      - dev
+
+# ===========================================
+# Volumes
+# ===========================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  minio_data:
+    driver: local
+
+# ===========================================
+# Networks
+# ===========================================
+networks:
+  motochefe-network:
+    driver: bridge
