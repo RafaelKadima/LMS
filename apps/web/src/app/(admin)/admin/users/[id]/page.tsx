@@ -115,7 +115,6 @@ export default function UserFormPage() {
         email: form.email,
         name: form.name,
         role: form.role,
-        isActive: form.isActive,
       };
 
       // Adiciona campos apenas se necessários para o role
@@ -133,6 +132,8 @@ export default function UserFormPage() {
         payload.password = form.password;
         await api.admin.createUser(payload);
       } else {
+        // isActive só é enviado na atualização
+        payload.isActive = form.isActive;
         await api.admin.updateUser(userId!, payload);
       }
       router.push('/admin/users');
