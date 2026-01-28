@@ -113,7 +113,7 @@ model User {
   name         String
   franchiseId  String?  @map("franchise_id")
   storeId      String?  @map("store_id")
-  cargo        Cargo
+  cargo        Cargo?
   role         UserRole @default(learner)
   avatarUrl    String?  @map("avatar_url")
   isActive     Boolean  @default(true) @map("is_active")

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Save, ArrowLeft, Loader2 } from 'lucide-react';
+import { Save, ArrowLeft, Loader2, Info } from 'lucide-react';
 import { PageHeader } from '@/components/admin';
 import { api } from '@/lib/api';
 
@@ -16,6 +16,38 @@ interface UserForm {
   role: string;
   isActive: boolean;
 }
+
+// Configuração de campos por role
+const ROLE_CONFIG = {
+  super_admin: {
+    label: 'Administrador da Matriz',
+    description: 'Acesso total ao sistema. Gerencia todas as franquias e configurações.',
+    showFranchise: false,
+    showStore: false,
+    showCargo: false,
+  },
+  franchise_admin: {
+    label: 'Administrador de Franquia',
+    description: 'Gerencia uma franquia específica e seus colaboradores.',
+    showFranchise: true,
+    showStore: false,
+    showCargo: true, // Opcional - pode fazer cursos
+  },
+  store_manager: {
+    label: 'Gerente de Loja',
+    description: 'Gerencia uma loja e acompanha o progresso dos colaboradores.',
+    showFranchise: true,
+    showStore: true,
+    showCargo: true,
+  },
+  learner: {
+    label: 'Colaborador',
+    description: 'Acessa cursos e treinamentos da plataforma.',
+    showFranchise: true,
+    showStore: true, // Opcional
+    showCargo: true,
+  },
+};
 
 export default function UserFormPage() {
   const router = useRouter();
@@ -77,15 +109,25 @@ export default function UserFormPage() {
     setError(null);
 
     try {
+      const config = ROLE_CONFIG[form.role as keyof typeof ROLE_CONFIG];
+
       const payload: any = {
         email: form.email,
         name: form.name,
-        franchiseId: form.franchiseId || undefined,
-        storeId: form.storeId || undefined,
-        cargo: form.cargo,
         role: form.role,
         isActive: form.isActive,
       };
+
+      // Adiciona campos apenas se necessários para o role
+      if (config.showFranchise && form.franchiseId) {
+        payload.franchiseId = form.franchiseId;
+      }
+      if (config.showStore && form.storeId) {
+        payload.storeId = form.storeId;
+      }
+      if (config.showCargo && form.cargo) {
+        payload.cargo = form.cargo;
+      }
 
       if (isNew) {
         payload.password = form.password;
@@ -104,6 +146,24 @@ export default function UserFormPage() {
   const filteredStores = form.franchiseId
     ? stores.filter((s) => s.franchiseId === form.franchiseId)
     : stores;
+
+  // Configuração do role atual
+  const currentRoleConfig = ROLE_CONFIG[form.role as keyof typeof ROLE_CONFIG] || ROLE_CONFIG.learner;
+
+  // Handler para mudança de role - limpa campos dependentes
+  const handleRoleChange = (newRole: string) => {
+    const config = ROLE_CONFIG[newRole as keyof typeof ROLE_CONFIG];
+    setForm({
+      ...form,
+      role: newRole,
+      // Limpa franquia se o novo role não precisa
+      franchiseId: config.showFranchise ? form.franchiseId : '',
+      // Limpa loja se o novo role não precisa
+      storeId: config.showStore ? form.storeId : '',
+      // Limpa cargo se o novo role não precisa
+      cargo: config.showCargo ? form.cargo : '',
+    });
+  };
 
   if (isLoading) {
     return (
@@ -139,6 +199,25 @@ export default function UserFormPage() {
               {error}
             </div>
           )}
+
+          {/* Tipo de Usuário (Role) - Primeiro campo para controlar visibilidade */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Tipo de Usuário *</label>
+            <select
+              value={form.role}
+              onChange={(e) => handleRoleChange(e.target.value)}
+              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+            >
+              <option value="learner">{ROLE_CONFIG.learner.label}</option>
+              <option value="store_manager">{ROLE_CONFIG.store_manager.label}</option>
+              <option value="franchise_admin">{ROLE_CONFIG.franchise_admin.label}</option>
+              <option value="super_admin">{ROLE_CONFIG.super_admin.label}</option>
+            </select>
+            <div className="mt-2 flex items-start gap-2 text-sm text-gray-500">
+              <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>{currentRoleConfig.description}</span>
+            </div>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -180,64 +259,77 @@ export default function UserFormPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Papel *</label>
-              <select
-                value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
-              >
-                <option value="learner">Colaborador</option>
-                <option value="store_manager">Gerente de Loja</option>
-                <option value="franchise_admin">Admin Franquia</option>
-                <option value="super_admin">Super Admin</option>
-              </select>
+          {/* Franquia - visível para todos exceto super_admin */}
+          {currentRoleConfig.showFranchise && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Franquia {form.role !== 'learner' ? '*' : ''}
+                </label>
+                <select
+                  value={form.franchiseId}
+                  onChange={(e) => setForm({ ...form, franchiseId: e.target.value, storeId: '' })}
+                  required={form.role !== 'learner'}
+                  className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                >
+                  <option value="">Selecione...</option>
+                  {franchises.map((f) => (
+                    <option key={f.id} value={f.id}>{f.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Loja - visível para store_manager e learner */}
+              {currentRoleConfig.showStore && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Loja {form.role === 'store_manager' ? '*' : '(opcional)'}
+                  </label>
+                  <select
+                    value={form.storeId}
+                    onChange={(e) => setForm({ ...form, storeId: e.target.value })}
+                    disabled={!form.franchiseId}
+                    required={form.role === 'store_manager'}
+                    className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 disabled:opacity-50"
+                  >
+                    <option value="">Selecione...</option>
+                    {filteredStores.map((s) => (
+                      <option key={s.id} value={s.id}>{s.name}</option>
+                    ))}
+                  </select>
+                  {!form.franchiseId && (
+                    <p className="mt-1 text-xs text-gray-500">Selecione uma franquia primeiro</p>
+                  )}
+                </div>
+              )}
             </div>
+          )}
+
+          {/* Cargo - visível para todos exceto super_admin */}
+          {currentRoleConfig.showCargo && (
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Cargo *</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Cargo {['store_manager', 'learner'].includes(form.role) ? '*' : '(opcional)'}
+              </label>
               <select
                 value={form.cargo}
                 onChange={(e) => setForm({ ...form, cargo: e.target.value })}
+                required={['store_manager', 'learner'].includes(form.role)}
                 className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
               >
+                {!['store_manager', 'learner'].includes(form.role) && (
+                  <option value="">Nenhum</option>
+                )}
                 <option value="mecanico">Mecânico</option>
                 <option value="atendente">Atendente</option>
                 <option value="gerente">Gerente</option>
                 <option value="proprietario">Proprietário</option>
               </select>
+              <p className="mt-1 text-xs text-gray-500">
+                O cargo determina quais cursos estarão disponíveis para o usuário
+              </p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Franquia</label>
-              <select
-                value={form.franchiseId}
-                onChange={(e) => setForm({ ...form, franchiseId: e.target.value, storeId: '' })}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
-              >
-                <option value="">Selecione...</option>
-                {franchises.map((f) => (
-                  <option key={f.id} value={f.id}>{f.name}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Loja</label>
-              <select
-                value={form.storeId}
-                onChange={(e) => setForm({ ...form, storeId: e.target.value })}
-                disabled={!form.franchiseId}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 disabled:opacity-50"
-              >
-                <option value="">Selecione...</option>
-                {filteredStores.map((s) => (
-                  <option key={s.id} value={s.id}>{s.name}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+          )}
 
           <div className="flex items-center gap-3">
             <input

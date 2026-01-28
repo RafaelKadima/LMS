@@ -24,16 +24,19 @@ export class CatalogService {
         { franchiseId: null }, // Global courses
         { franchiseId }, // Franchise-specific
       ],
-      // Cursos que incluem o cargo do usuário OU não têm restrição de cargo (array vazio)
-      AND: [
-        {
-          OR: [
-            { targetCargos: { has: cargo } },
-            { targetCargos: { isEmpty: true } }, // Cursos para todos os cargos (array vazio)
-          ],
-        },
-      ],
+      AND: [],
     };
+
+    // Filtro de cargo: se o usuário tem cargo, filtra por ele
+    // Se não tem cargo (admin), vê todos os cursos
+    if (cargo) {
+      where.AND.push({
+        OR: [
+          { targetCargos: { has: cargo } },
+          { targetCargos: { isEmpty: true } }, // Cursos para todos os cargos
+        ],
+      });
+    }
 
     if (search) {
       // Adicionar busca ao array AND existente
@@ -135,20 +138,25 @@ export class CatalogService {
   async getRequired(user: any) {
     const { franchiseId, cargo, sub: userId } = user;
 
-    const courses = await this.prisma.course.findMany({
-      where: {
-        status: 'published',
-        isRequired: true,
-        OR: [{ franchiseId: null }, { franchiseId }],
-        AND: [
-          {
-            OR: [
-              { targetCargos: { has: cargo } },
-              { targetCargos: { isEmpty: true } }, // Cursos para todos os cargos
-            ],
-          },
+    const where: any = {
+      status: 'published',
+      isRequired: true,
+      OR: [{ franchiseId: null }, { franchiseId }],
+      AND: [],
+    };
+
+    // Filtro de cargo: se o usuário tem cargo, filtra por ele
+    if (cargo) {
+      where.AND.push({
+        OR: [
+          { targetCargos: { has: cargo } },
+          { targetCargos: { isEmpty: true } },
         ],
-      },
+      });
+    }
+
+    const courses = await this.prisma.course.findMany({
+      where,
       include: {
         modules: {
           include: {
@@ -179,24 +187,29 @@ export class CatalogService {
   async getRecommended(user: any) {
     const { franchiseId, cargo, sub: userId } = user;
 
+    const where: any = {
+      status: 'published',
+      isRequired: false,
+      OR: [{ franchiseId: null }, { franchiseId }],
+      AND: [],
+      enrollments: {
+        none: { userId },
+      },
+    };
+
+    // Filtro de cargo: se o usuário tem cargo, filtra por ele
+    if (cargo) {
+      where.AND.push({
+        OR: [
+          { targetCargos: { has: cargo } },
+          { targetCargos: { isEmpty: true } },
+        ],
+      });
+    }
+
     // Get courses user hasn't started yet
     const courses = await this.prisma.course.findMany({
-      where: {
-        status: 'published',
-        isRequired: false,
-        OR: [{ franchiseId: null }, { franchiseId }],
-        AND: [
-          {
-            OR: [
-              { targetCargos: { has: cargo } },
-              { targetCargos: { isEmpty: true } }, // Cursos para todos os cargos
-            ],
-          },
-        ],
-        enrollments: {
-          none: { userId },
-        },
-      },
+      where,
       include: {
         modules: {
           include: {

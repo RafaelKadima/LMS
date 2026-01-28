@@ -177,6 +177,12 @@ export class UsersService {
       throw new ForbiddenException('FranchiseId é obrigatório para usuários que não são super_admin');
     }
 
+    // Validate cargo requirement based on role
+    // store_manager and learner require cargo for course targeting
+    if (['store_manager', 'learner'].includes(dto.role) && !dto.cargo) {
+      throw new ForbiddenException('Cargo é obrigatório para gerentes de loja e colaboradores');
+    }
+
     // Check permission to create user in this franchise
     if (currentUser.role === 'franchise_admin' && dto.franchiseId !== currentUser.franchiseId) {
       throw new ForbiddenException('Sem permissão para criar usuário em outra franquia');

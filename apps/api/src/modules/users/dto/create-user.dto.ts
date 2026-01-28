@@ -26,9 +26,10 @@ export class CreateUserDto {
   @IsOptional()
   storeId?: string;
 
-  @ApiProperty({ enum: Cargo, example: 'mecanico', description: 'Cargo do usuário' })
+  @ApiPropertyOptional({ enum: Cargo, example: 'mecanico', description: 'Cargo do usuário (obrigatório para store_manager e learner)' })
   @IsEnum(Cargo)
-  cargo: Cargo;
+  @IsOptional()
+  cargo?: Cargo;
 
   @ApiProperty({ enum: UserRole, example: 'learner', description: 'Role do usuário' })
   @IsEnum(UserRole)
