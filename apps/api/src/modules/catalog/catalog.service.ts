@@ -14,7 +14,9 @@ export class CatalogService {
 
   async getCatalog(user: any, filters: CatalogFilters) {
     const { franchiseId, cargo, sub: userId } = user;
-    const { search, page = 1, perPage = 20 } = filters;
+    const { search } = filters;
+    const page = Number(filters.page) || 1;
+    const perPage = Number(filters.perPage) || 20;
 
     const where: any = {
       status: 'published',
