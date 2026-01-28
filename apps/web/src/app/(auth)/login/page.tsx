@@ -123,13 +123,13 @@ function LoginForm() {
               />
             ) : (
               <>
+                <h2 className="text-2xl font-semibold text-white">Universidade</h2>
                 <h1
-                  className="text-4xl font-bold"
+                  className="mt-1 text-4xl font-bold"
                   style={{ color: primaryColor }}
                 >
-                  Universidade
+                  MotoChefe
                 </h1>
-                <h2 className="mt-2 text-2xl font-semibold text-white">MotoChefe</h2>
               </>
             )}
             <p className="mt-4 text-gray-400">
