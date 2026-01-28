@@ -16,9 +16,10 @@ export class CreateUserDto {
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 'uuid-da-franquia', description: 'ID da franquia' })
+  @ApiPropertyOptional({ example: 'uuid-da-franquia', description: 'ID da franquia (opcional para super_admin)' })
   @IsUUID()
-  franchiseId: string;
+  @IsOptional()
+  franchiseId?: string;
 
   @ApiPropertyOptional({ example: 'uuid-da-loja', description: 'ID da loja (opcional)' })
   @IsUUID()

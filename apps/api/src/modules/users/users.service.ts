@@ -170,9 +170,21 @@ export class UsersService {
       throw new ConflictException('Email já está em uso');
     }
 
+    // Validate franchiseId requirement based on role
+    // super_admin can be created without franchiseId (headquarters user)
+    // Other roles require franchiseId
+    if (dto.role !== 'super_admin' && !dto.franchiseId) {
+      throw new ForbiddenException('FranchiseId é obrigatório para usuários que não são super_admin');
+    }
+
     // Check permission to create user in this franchise
     if (currentUser.role === 'franchise_admin' && dto.franchiseId !== currentUser.franchiseId) {
       throw new ForbiddenException('Sem permissão para criar usuário em outra franquia');
+    }
+
+    // Only super_admin can create other super_admin users
+    if (dto.role === 'super_admin' && currentUser.role !== 'super_admin') {
+      throw new ForbiddenException('Apenas super_admin pode criar outros super_admin');
     }
 
     // Hash password

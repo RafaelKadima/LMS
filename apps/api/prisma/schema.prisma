@@ -111,7 +111,7 @@ model User {
   email        String   @unique
   passwordHash String   @map("password_hash")
   name         String
-  franchiseId  String   @map("franchise_id")
+  franchiseId  String?  @map("franchise_id")
   storeId      String?  @map("store_id")
   cargo        Cargo
   role         UserRole @default(learner)
@@ -120,7 +120,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  franchise      Franchise        @relation(fields: [franchiseId], references: [id])
+  franchise      Franchise?       @relation(fields: [franchiseId], references: [id])
   store          Store?           @relation(fields: [storeId], references: [id])
   enrollments    Enrollment[]
   lessonProgress LessonProgress[]

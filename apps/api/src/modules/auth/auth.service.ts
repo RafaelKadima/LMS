@@ -57,10 +57,12 @@ export class AuthService {
       cargo: user.cargo,
       role: user.role,
       accessToken,
-      franchise: {
-        id: user.franchise.id,
-        name: user.franchise.name,
-      },
+      franchise: user.franchise
+        ? {
+            id: user.franchise.id,
+            name: user.franchise.name,
+          }
+        : null,
       store: user.store
         ? {
             id: user.store.id,
@@ -90,10 +92,12 @@ export class AuthService {
       cargo: user.cargo,
       role: user.role,
       avatarUrl: user.avatarUrl,
-      franchise: {
-        id: user.franchise.id,
-        name: user.franchise.name,
-      },
+      franchise: user.franchise
+        ? {
+            id: user.franchise.id,
+            name: user.franchise.name,
+          }
+        : null,
       store: user.store
         ? {
             id: user.store.id,
