@@ -10,12 +10,14 @@ import {
   BarChart3,
   Settings,
   Users,
+  FolderOpen,
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 const menuItems = [
   { href: '/catalog', label: 'Catálogo', icon: Home },
   { href: '/tracks', label: 'Trilhas', icon: Route },
+  { href: '/materials', label: 'Materiais', icon: FolderOpen },
   { href: '/profile', label: 'Meu Progresso', icon: BookOpen },
   { href: '/achievements', label: 'Conquistas', icon: Trophy },
 ];

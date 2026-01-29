@@ -410,4 +410,84 @@ export const api = {
     const { data } = await apiClient.get('/settings');
     return data;
   },
+
+  // =====================
+  // Google Drive
+  // =====================
+  drive: {
+    getRootFolders: async () => {
+      const { data } = await apiClient.get('/drive/folders');
+      return data;
+    },
+
+    getFolderContents: async (folderId: string) => {
+      const { data } = await apiClient.get(`/drive/folders/${folderId}`);
+      return data;
+    },
+
+    getFileDetails: async (fileId: string) => {
+      const { data } = await apiClient.get(`/drive/files/${fileId}`);
+      return data;
+    },
+
+    getDownloadUrl: (fileId: string) => {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+      return `${baseUrl}/drive/files/${fileId}/download`;
+    },
+
+    // Download file with authentication
+    downloadFile: async (fileId: string, fileName: string) => {
+      const response = await apiClient.get(`/drive/files/${fileId}/download`, {
+        responseType: 'blob',
+      });
+
+      // Create blob URL and trigger download
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+
+    // Get stream URL for preview (authenticated via token in URL)
+    getStreamUrl: async (fileId: string) => {
+      const session = await getSession();
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api';
+      // We'll use the stream endpoint with token in header via fetch
+      return `${baseUrl}/drive/files/${fileId}/stream`;
+    },
+
+    // Fetch file as blob for preview (authenticated)
+    getFileBlob: async (fileId: string): Promise<string> => {
+      const response = await apiClient.get(`/drive/files/${fileId}/stream`, {
+        responseType: 'blob',
+      });
+      const blob = new Blob([response.data]);
+      return window.URL.createObjectURL(blob);
+    },
+
+    getPreviewUrl: async (fileId: string) => {
+      const { data } = await apiClient.get(`/drive/files/${fileId}/preview`);
+      return data.url;
+    },
+
+    search: async (query: string) => {
+      const { data } = await apiClient.get('/drive/search', { params: { q: query } });
+      return data;
+    },
+
+    getBreadcrumb: async (folderId: string) => {
+      const { data } = await apiClient.get(`/drive/breadcrumb/${folderId}`);
+      return data;
+    },
+
+    getStatus: async () => {
+      const { data } = await apiClient.get('/drive/status');
+      return data;
+    },
+  },
 };

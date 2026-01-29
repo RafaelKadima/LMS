@@ -23,6 +23,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { ReportsModule } from './modules/admin/reports/reports.module';
+import { DriveModule } from './modules/drive/drive.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { ReportsModule } from './modules/admin/reports/reports.module';
     GamificationModule,
     SettingsModule,
     ReportsModule,
+    DriveModule,
   ],
 })
 export class AppModule {}
