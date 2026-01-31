@@ -63,7 +63,7 @@ export default function BadgesPage() {
       sortable: true,
       render: (badge) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-surface-hover rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-white/[0.06] rounded-lg flex items-center justify-center">
             {badge.imageUrl ? (
               <img src={badge.imageUrl} alt={badge.name} className="w-8 h-8 object-contain" />
             ) : (
@@ -72,7 +72,7 @@ export default function BadgesPage() {
           </div>
           <div>
             <p className="font-medium">{badge.name}</p>
-            <p className="text-xs text-gray-500 truncate max-w-xs">{badge.description}</p>
+            <p className="text-xs text-white/40 truncate max-w-xs">{badge.description}</p>
           </div>
         </div>
       ),
@@ -90,14 +90,14 @@ export default function BadgesPage() {
       header: 'Conquistados',
       sortable: true,
       render: (badge) => (
-        <span className="text-gray-300">{badge.awardsCount} usuários</span>
+        <span className="text-white/70">{badge.awardsCount} usuários</span>
       ),
     },
     {
       key: 'createdAt',
       header: 'Criado em',
       render: (badge) => (
-        <span className="text-gray-400">
+        <span className="text-white/50">
           {new Date(badge.createdAt).toLocaleDateString('pt-BR')}
         </span>
       ),
@@ -139,7 +139,7 @@ export default function BadgesPage() {
                 e.stopPropagation();
                 router.push(`/admin/badges/${badge.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -149,7 +149,7 @@ export default function BadgesPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, badge });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />

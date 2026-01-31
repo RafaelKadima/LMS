@@ -76,7 +76,7 @@ export default function TracksPage() {
       sortable: true,
       render: (track) => (
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-surface-hover rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="w-12 h-12 bg-white/[0.06] rounded-lg flex items-center justify-center overflow-hidden">
             {track.thumbnailUrl ? (
               <img src={track.thumbnailUrl} alt={track.name} className="w-full h-full object-cover" />
             ) : (
@@ -86,7 +86,7 @@ export default function TracksPage() {
           <div>
             <p className="font-medium">{track.name}</p>
             {track.description && (
-              <p className="text-xs text-gray-500 line-clamp-1">{track.description}</p>
+              <p className="text-xs text-white/40 line-clamp-1">{track.description}</p>
             )}
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function TracksPage() {
       key: 'courses',
       header: 'Cursos',
       render: (track) => (
-        <div className="flex items-center gap-1 text-gray-300">
+        <div className="flex items-center gap-1 text-white/70">
           <BookOpen className="w-4 h-4" />
           {track._count?.courses || track.courses?.length || 0}
         </div>
@@ -106,7 +106,7 @@ export default function TracksPage() {
       key: 'enrollments',
       header: 'Matrículas',
       render: (track) => (
-        <span className="text-gray-300">{track._count?.enrollments || 0}</span>
+        <span className="text-white/70">{track._count?.enrollments || 0}</span>
       ),
     },
     {
@@ -151,7 +151,7 @@ export default function TracksPage() {
                 e.stopPropagation();
                 router.push(`/admin/tracks/${track.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -161,7 +161,7 @@ export default function TracksPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, track });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />

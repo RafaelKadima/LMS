@@ -1,10 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
 import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { api } from '@/lib/api';
 import { CONFIG } from '@motochefe/shared/utils';
+
+export interface VideoPlayerHandle {
+  pause: () => void;
+  play: () => void;
+  getCurrentTime: () => number;
+}
 
 interface VideoPlayerProps {
   lessonId: string;
@@ -18,23 +24,42 @@ interface VideoPlayerProps {
   onComplete?: () => void;
 }
 
-export function VideoPlayer({
-  lessonId,
-  lessonTitle,
-  courseId,
-  courseTitle,
-  manifestUrl,
-  videoUrl,
-  startPosition = 0,
-  duration: propDuration,
-  onComplete,
-}: VideoPlayerProps) {
+export const VideoPlayer = forwardRef<VideoPlayerHandle, VideoPlayerProps>(function VideoPlayer(
+  {
+    lessonId,
+    lessonTitle,
+    courseId,
+    courseTitle,
+    manifestUrl,
+    videoUrl,
+    startPosition = 0,
+    duration: propDuration,
+    onComplete,
+  }: VideoPlayerProps,
+  ref: React.Ref<VideoPlayerHandle>,
+) {
   const videoRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<any>(null);
   const secondsWatchedRef = useRef(0);
   const lastPositionRef = useRef(startPosition);
   const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const onCompleteRef = useRef(onComplete);
+
+  useImperativeHandle(ref, () => ({
+    pause: () => {
+      if (playerRef.current && !playerRef.current.paused()) {
+        playerRef.current.pause();
+      }
+    },
+    play: () => {
+      if (playerRef.current && playerRef.current.paused()) {
+        playerRef.current.play();
+      }
+    },
+    getCurrentTime: () => {
+      return playerRef.current?.currentTime() || 0;
+    },
+  }));
 
   // Atualizar ref quando onComplete mudar
   useEffect(() => {
@@ -232,4 +257,4 @@ export function VideoPlayer({
       <div ref={videoRef} className="aspect-video" />
     </div>
   );
-}
+});

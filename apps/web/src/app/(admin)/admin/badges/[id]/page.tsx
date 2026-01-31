@@ -167,7 +167,7 @@ export default function BadgeFormPage() {
       >
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 px-4 py-2.5 text-gray-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 text-white/50 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           Voltar
@@ -175,7 +175,7 @@ export default function BadgeFormPage() {
       </PageHeader>
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6 space-y-6">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 space-y-6">
           {error && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
               {error}
@@ -183,8 +183,8 @@ export default function BadgeFormPage() {
           )}
 
           {/* Preview */}
-          <div className="flex items-center gap-4 p-4 bg-surface-dark rounded-lg">
-            <div className="w-16 h-16 bg-surface-hover rounded-xl flex items-center justify-center">
+          <div className="flex items-center gap-4 p-4 bg-white/[0.04] rounded-lg">
+            <div className="w-16 h-16 bg-white/[0.06] rounded-xl flex items-center justify-center">
               {form.imageUrl ? (
                 <img src={form.imageUrl} alt="Preview" className="w-12 h-12 object-contain" />
               ) : (
@@ -193,74 +193,74 @@ export default function BadgeFormPage() {
             </div>
             <div>
               <p className="text-white font-medium">{form.name || 'Nome do Badge'}</p>
-              <p className="text-gray-400 text-sm">{form.description || 'Descrição do badge'}</p>
+              <p className="text-white/50 text-sm">{form.description || 'Descrição do badge'}</p>
               <p className="text-brand-500 text-sm font-medium mt-1">{form.points} pontos</p>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Nome *</label>
+            <label className="block text-sm font-medium text-white/70 mb-2">Nome *</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
-              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
               placeholder="Ex: Primeiro Curso Concluído"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
+            <label className="block text-sm font-medium text-white/70 mb-2">Descrição</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={3}
-              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 resize-none"
+              className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors resize-none"
               placeholder="Descreva como conquistar este badge"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">URL da Imagem</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">URL da Imagem</label>
               <input
                 type="url"
                 value={form.imageUrl}
                 onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="https://..."
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Pontos *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">Pontos *</label>
               <input
                 type="number"
                 value={form.points}
                 onChange={(e) => setForm({ ...form, points: parseInt(e.target.value) || 0 })}
                 required
                 min={0}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
               />
             </div>
           </div>
 
           {/* Seção de Critérios de Gamificação */}
-          <div className="border-t border-gray-800 pt-6">
-            <h3 className="text-lg font-medium text-white mb-4 flex items-center gap-2">
+          <div className="border-t border-white/[0.06] pt-6">
+            <h3 className="text-lg font-display font-medium tracking-tight text-white mb-4 flex items-center gap-2">
               <Award className="w-5 h-5 text-brand-500" />
               Critério de Concessão Automática
             </h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Quando conceder este badge?
                 </label>
                 <select
                   value={form.criteriaType}
                   onChange={(e) => setForm({ ...form, criteriaType: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                  className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 >
                   {CRITERIA_TYPES.map((type) => (
                     <option key={type.value} value={type.value}>
@@ -273,7 +273,7 @@ export default function BadgeFormPage() {
               {/* Campo de valor numérico para cursos/aulas */}
               {(form.criteriaType === 'courses_completed' || form.criteriaType === 'lessons_watched') && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-white/70 mb-2">
                     {form.criteriaType === 'courses_completed' ? 'Quantidade de cursos' : 'Quantidade de aulas'}
                   </label>
                   <input
@@ -281,7 +281,7 @@ export default function BadgeFormPage() {
                     value={form.criteriaValue}
                     onChange={(e) => setForm({ ...form, criteriaValue: parseInt(e.target.value) || 1 })}
                     min={1}
-                    className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                    className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                   />
                 </div>
               )}
@@ -289,11 +289,11 @@ export default function BadgeFormPage() {
               {/* Seletor de curso específico */}
               {form.criteriaType === 'specific_course' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Selecione o curso</label>
+                  <label className="block text-sm font-medium text-white/70 mb-2">Selecione o curso</label>
                   <select
                     value={form.criteriaCourseId}
                     onChange={(e) => setForm({ ...form, criteriaCourseId: e.target.value })}
-                    className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                    className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                   >
                     <option value="">Selecione um curso...</option>
                     {courses.map((course) => (
@@ -313,11 +313,11 @@ export default function BadgeFormPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+          <div className="flex items-center gap-4 pt-4 border-t border-white/[0.06]">
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 font-medium disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors shadow-glow"
             >
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {isSaving ? 'Salvando...' : 'Salvar'}
@@ -325,7 +325,7 @@ export default function BadgeFormPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2.5 text-gray-400 hover:text-white transition-colors"
+              className="px-6 py-2.5 text-white/50 hover:text-white transition-colors"
             >
               Cancelar
             </button>

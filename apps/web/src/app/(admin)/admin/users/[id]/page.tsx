@@ -186,7 +186,7 @@ export default function UserFormPage() {
       >
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 px-4 py-2.5 text-gray-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 text-white/50 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           Voltar
@@ -194,7 +194,7 @@ export default function UserFormPage() {
       </PageHeader>
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6 space-y-6">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 space-y-6">
           {error && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
               {error}
@@ -203,43 +203,43 @@ export default function UserFormPage() {
 
           {/* Tipo de Usuário (Role) - Primeiro campo para controlar visibilidade */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Tipo de Usuário *</label>
+            <label className="block text-sm font-medium text-white/70 mb-2">Tipo de Usuário *</label>
             <select
               value={form.role}
               onChange={(e) => handleRoleChange(e.target.value)}
-              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
             >
               <option value="learner">{ROLE_CONFIG.learner.label}</option>
               <option value="store_manager">{ROLE_CONFIG.store_manager.label}</option>
               <option value="franchise_admin">{ROLE_CONFIG.franchise_admin.label}</option>
               <option value="super_admin">{ROLE_CONFIG.super_admin.label}</option>
             </select>
-            <div className="mt-2 flex items-start gap-2 text-sm text-gray-500">
+            <div className="mt-2 flex items-start gap-2 text-sm text-white/40">
               <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <span>{currentRoleConfig.description}</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Nome *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">Nome *</label>
               <input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="João Silva"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">Email *</label>
               <input
                 type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="joao@empresa.com"
               />
             </div>
@@ -247,14 +247,14 @@ export default function UserFormPage() {
 
           {isNew && (
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Senha *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">Senha *</label>
               <input
                 type="password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 required
                 minLength={6}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
@@ -262,16 +262,16 @@ export default function UserFormPage() {
 
           {/* Franquia - visível para todos exceto super_admin */}
           {currentRoleConfig.showFranchise && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Franquia {form.role !== 'learner' ? '*' : ''}
                 </label>
                 <select
                   value={form.franchiseId}
                   onChange={(e) => setForm({ ...form, franchiseId: e.target.value, storeId: '' })}
                   required={form.role !== 'learner'}
-                  className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                  className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 >
                   <option value="">Selecione...</option>
                   {franchises.map((f) => (
@@ -283,7 +283,7 @@ export default function UserFormPage() {
               {/* Loja - visível para store_manager e learner */}
               {currentRoleConfig.showStore && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-white/70 mb-2">
                     Loja {form.role === 'store_manager' ? '*' : '(opcional)'}
                   </label>
                   <select
@@ -291,7 +291,7 @@ export default function UserFormPage() {
                     onChange={(e) => setForm({ ...form, storeId: e.target.value })}
                     disabled={!form.franchiseId}
                     required={form.role === 'store_manager'}
-                    className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 disabled:opacity-50"
+                    className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <option value="">Selecione...</option>
                     {filteredStores.map((s) => (
@@ -299,7 +299,7 @@ export default function UserFormPage() {
                     ))}
                   </select>
                   {!form.franchiseId && (
-                    <p className="mt-1 text-xs text-gray-500">Selecione uma franquia primeiro</p>
+                    <p className="mt-1 text-xs text-white/40">Selecione uma franquia primeiro</p>
                   )}
                 </div>
               )}
@@ -309,14 +309,14 @@ export default function UserFormPage() {
           {/* Cargo - visível para todos exceto super_admin */}
           {currentRoleConfig.showCargo && (
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white/70 mb-2">
                 Cargo {['store_manager', 'learner'].includes(form.role) ? '*' : '(opcional)'}
               </label>
               <select
                 value={form.cargo}
                 onChange={(e) => setForm({ ...form, cargo: e.target.value })}
                 required={['store_manager', 'learner'].includes(form.role)}
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
               >
                 {!['store_manager', 'learner'].includes(form.role) && (
                   <option value="">Nenhum</option>
@@ -326,7 +326,7 @@ export default function UserFormPage() {
                 <option value="gerente">Gerente</option>
                 <option value="proprietario">Proprietário</option>
               </select>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-white/40">
                 O cargo determina quais cursos estarão disponíveis para o usuário
               </p>
             </div>
@@ -338,16 +338,16 @@ export default function UserFormPage() {
               id="isActive"
               checked={form.isActive}
               onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-              className="w-4 h-4 rounded border-gray-700 bg-surface-dark text-brand-500"
+              className="w-4 h-4 rounded border-white/[0.08] bg-white/[0.04] text-brand-500"
             />
-            <label htmlFor="isActive" className="text-sm text-gray-300">Usuário ativo</label>
+            <label htmlFor="isActive" className="text-sm text-white/70">Usuário ativo</label>
           </div>
 
-          <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+          <div className="flex items-center gap-4 pt-4 border-t border-white/[0.06]">
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 font-medium disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors shadow-glow"
             >
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {isSaving ? 'Salvando...' : 'Salvar'}
@@ -355,7 +355,7 @@ export default function UserFormPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2.5 text-gray-400 hover:text-white transition-colors"
+              className="px-6 py-2.5 text-white/50 hover:text-white transition-colors"
             >
               Cancelar
             </button>

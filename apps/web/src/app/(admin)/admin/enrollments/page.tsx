@@ -155,7 +155,7 @@ export default function EnrollmentsPage() {
       sortable: true,
       render: (enrollment) => (
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-surface-hover rounded-full flex items-center justify-center text-sm font-medium text-white">
+          <div className="w-8 h-8 bg-white/[0.06] rounded-full flex items-center justify-center text-sm font-medium text-white">
             {enrollment.user?.avatarUrl ? (
               <img src={enrollment.user.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover" />
             ) : (
@@ -164,7 +164,7 @@ export default function EnrollmentsPage() {
           </div>
           <div>
             <p className="font-medium">{enrollment.user?.name}</p>
-            <p className="text-xs text-gray-500">{enrollment.user?.email}</p>
+            <p className="text-xs text-white/40">{enrollment.user?.email}</p>
           </div>
         </div>
       ),
@@ -174,16 +174,16 @@ export default function EnrollmentsPage() {
       header: 'Curso',
       render: (enrollment) => (
         <div className="flex items-center gap-3">
-          <div className="w-12 h-8 bg-surface-hover rounded overflow-hidden">
+          <div className="w-12 h-8 bg-white/[0.06] rounded overflow-hidden">
             {enrollment.course?.thumbnailUrl ? (
               <img src={enrollment.course.thumbnailUrl} alt="" className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <BookOpen className="w-4 h-4 text-gray-500" />
+                <BookOpen className="w-4 h-4 text-white/40" />
               </div>
             )}
           </div>
-          <span className="text-gray-300">{enrollment.course?.title}</span>
+          <span className="text-white/70">{enrollment.course?.title}</span>
         </div>
       ),
     },
@@ -192,13 +192,13 @@ export default function EnrollmentsPage() {
       header: 'Progresso',
       render: (enrollment) => (
         <div className="flex items-center gap-2">
-          <div className="w-24 h-2 bg-surface-hover rounded-full overflow-hidden">
+          <div className="w-24 h-2 bg-white/[0.06] rounded-full overflow-hidden">
             <div
-              className="h-full bg-brand-500 rounded-full transition-all"
+              className="h-full bg-gradient-to-r from-brand-500 to-brand-400 rounded-full transition-all"
               style={{ width: `${enrollment.progress}%` }}
             />
           </div>
-          <span className="text-sm text-gray-400">{enrollment.progress}%</span>
+          <span className="text-sm text-white/50">{enrollment.progress}%</span>
         </div>
       ),
     },
@@ -207,7 +207,7 @@ export default function EnrollmentsPage() {
       header: 'Data Matrícula',
       sortable: true,
       render: (enrollment) => (
-        <span className="text-gray-400">{formatDate(enrollment.enrolledAt)}</span>
+        <span className="text-white/50">{formatDate(enrollment.enrolledAt)}</span>
       ),
     },
     {
@@ -260,7 +260,7 @@ export default function EnrollmentsPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, enrollment });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Cancelar Matrícula"
             >
               <Trash2 className="w-4 h-4" />
@@ -284,18 +284,18 @@ export default function EnrollmentsPage() {
 
       {/* New Enrollment Modal */}
       {showNewModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-surface-card rounded-xl border border-gray-800 w-full max-w-md p-6">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="glass rounded-2xl border border-white/[0.06] w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-brand-500/10 rounded-lg flex items-center justify-center">
                   <UserPlus className="w-5 h-5 text-brand-500" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">Nova Matrícula</h3>
+                <h3 className="text-lg font-display font-semibold tracking-tight text-white">Nova Matrícula</h3>
               </div>
               <button
                 onClick={() => setShowNewModal(false)}
-                className="text-gray-400 hover:text-white text-xl"
+                className="text-white/50 hover:text-white text-xl"
               >
                 ×
               </button>
@@ -309,11 +309,11 @@ export default function EnrollmentsPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Usuário *</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Usuário *</label>
                 <select
                   value={newEnrollment.userId}
                   onChange={(e) => setNewEnrollment({ ...newEnrollment, userId: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                  className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 >
                   <option value="">Selecione um usuário...</option>
                   {users.map((user) => (
@@ -325,11 +325,11 @@ export default function EnrollmentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Curso *</label>
+                <label className="block text-sm font-medium text-white/70 mb-2">Curso *</label>
                 <select
                   value={newEnrollment.courseId}
                   onChange={(e) => setNewEnrollment({ ...newEnrollment, courseId: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                  className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 >
                   <option value="">Selecione um curso...</option>
                   {courses.map((course) => (
@@ -341,18 +341,18 @@ export default function EnrollmentsPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 mt-6 pt-4 border-t border-gray-800">
+            <div className="flex items-center gap-4 mt-6 pt-4 border-t border-white/[0.06]">
               <button
                 onClick={handleCreateEnrollment}
                 disabled={isCreating}
-                className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 font-medium disabled:opacity-50"
+                className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors shadow-glow"
               >
                 {isCreating ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
                 {isCreating ? 'Matriculando...' : 'Matricular'}
               </button>
               <button
                 onClick={() => setShowNewModal(false)}
-                className="px-6 py-2.5 text-gray-400 hover:text-white transition-colors"
+                className="px-6 py-2.5 text-white/50 hover:text-white transition-colors"
               >
                 Cancelar
               </button>

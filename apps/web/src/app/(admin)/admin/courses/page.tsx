@@ -34,7 +34,7 @@ interface CoursesResponse {
 const statusLabels: Record<string, { label: string; color: string }> = {
   draft: { label: 'Rascunho', color: 'bg-yellow-500/10 text-yellow-500' },
   published: { label: 'Publicado', color: 'bg-green-500/10 text-green-500' },
-  archived: { label: 'Arquivado', color: 'bg-gray-500/10 text-gray-400' },
+  archived: { label: 'Arquivado', color: 'bg-white/[0.06] text-white/40' },
 };
 
 export default function CoursesPage() {
@@ -90,16 +90,16 @@ export default function CoursesPage() {
       sortable: true,
       render: (course) => (
         <div className="flex items-center gap-3">
-          <div className="w-16 h-10 bg-surface-hover rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="w-16 h-10 bg-white/[0.06] rounded-lg flex items-center justify-center overflow-hidden">
             {course.thumbnailUrl ? (
               <img src={course.thumbnailUrl} alt={course.title} className="w-full h-full object-cover" />
             ) : (
-              <BookOpen className="w-5 h-5 text-gray-500" />
+              <BookOpen className="w-5 h-5 text-white/40" />
             )}
           </div>
           <div>
             <p className="font-medium">{course.title}</p>
-            <p className="text-xs text-gray-500">{formatDuration(course.durationMinutes)}</p>
+            <p className="text-xs text-white/40">{formatDuration(course.durationMinutes)}</p>
           </div>
         </div>
       ),
@@ -108,14 +108,14 @@ export default function CoursesPage() {
       key: 'modules',
       header: 'Módulos',
       render: (course) => (
-        <span className="text-gray-300">{course._count?.modules || 0}</span>
+        <span className="text-white/70">{course._count?.modules || 0}</span>
       ),
     },
     {
       key: 'enrollments',
       header: 'Matrículas',
       render: (course) => (
-        <div className="flex items-center gap-1 text-gray-300">
+        <div className="flex items-center gap-1 text-white/70">
           <Users className="w-4 h-4" />
           {course._count?.enrollments || 0}
         </div>
@@ -125,7 +125,7 @@ export default function CoursesPage() {
       key: 'isRequired',
       header: 'Obrigatório',
       render: (course) => (
-        <span className={course.isRequired ? 'text-brand-500' : 'text-gray-500'}>
+        <span className={course.isRequired ? 'text-brand-500' : 'text-white/40'}>
           {course.isRequired ? 'Sim' : 'Não'}
         </span>
       ),
@@ -179,7 +179,7 @@ export default function CoursesPage() {
                 e.stopPropagation();
                 window.open(`/course/${course.id}`, '_blank');
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Visualizar"
             >
               <Eye className="w-4 h-4" />
@@ -189,7 +189,7 @@ export default function CoursesPage() {
                 e.stopPropagation();
                 router.push(`/admin/courses/${course.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -199,7 +199,7 @@ export default function CoursesPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, course });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />

@@ -142,7 +142,7 @@ export default function UsersPage() {
       sortable: true,
       render: (user) => (
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-surface-hover rounded-full flex items-center justify-center text-sm font-medium text-white">
+          <div className="w-8 h-8 bg-white/[0.06] rounded-full flex items-center justify-center text-sm font-medium text-white">
             {user.avatarUrl ? (
               <img src={user.avatarUrl} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
             ) : (
@@ -151,7 +151,7 @@ export default function UsersPage() {
           </div>
           <div>
             <p className="font-medium">{user.name}</p>
-            <p className="text-xs text-gray-500">{user.email}</p>
+            <p className="text-xs text-white/40">{user.email}</p>
           </div>
         </div>
       ),
@@ -161,7 +161,7 @@ export default function UsersPage() {
       header: 'Papel',
       sortable: true,
       render: (user) => (
-        <span className="text-gray-300">{roleLabels[user.role] || user.role}</span>
+        <span className="text-white/70">{roleLabels[user.role] || user.role}</span>
       ),
     },
     {
@@ -169,21 +169,21 @@ export default function UsersPage() {
       header: 'Cargo',
       sortable: true,
       render: (user) => (
-        <span className="text-gray-300">{cargoLabels[user.cargo] || user.cargo}</span>
+        <span className="text-white/70">{cargoLabels[user.cargo] || user.cargo}</span>
       ),
     },
     {
       key: 'franchise',
       header: 'Franquia',
       render: (user) => (
-        <span className="text-gray-400">{user.franchise?.name || '-'}</span>
+        <span className="text-white/50">{user.franchise?.name || '-'}</span>
       ),
     },
     {
       key: 'store',
       header: 'Loja',
       render: (user) => (
-        <span className="text-gray-400">{user.store?.name || '-'}</span>
+        <span className="text-white/50">{user.store?.name || '-'}</span>
       ),
     },
     {
@@ -228,7 +228,7 @@ export default function UsersPage() {
                 e.stopPropagation();
                 router.push(`/admin/users/${user.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -238,7 +238,7 @@ export default function UsersPage() {
                 e.stopPropagation();
                 openPasswordModal(user);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-yellow-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-yellow-500 hover:bg-white/[0.06] transition-colors"
               title="Alterar Senha"
             >
               <Key className="w-4 h-4" />
@@ -248,7 +248,7 @@ export default function UsersPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, user });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />
@@ -273,21 +273,21 @@ export default function UsersPage() {
       {passwordModal.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/60"
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={closePasswordModal}
           />
-          <div className="relative bg-surface-card rounded-xl border border-gray-800 p-6 w-full max-w-md mx-4 shadow-xl">
+          <div className="relative glass rounded-2xl border border-white/[0.06] p-6 w-full max-w-md mx-4 shadow-xl">
             <button
               onClick={closePasswordModal}
-              className="absolute top-4 right-4 p-1 text-gray-400 hover:text-white"
+              className="absolute top-4 right-4 p-1 text-white/50 hover:text-white"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h3 className="text-lg font-display font-semibold tracking-tight text-white mb-2">
               Alterar Senha
             </h3>
-            <p className="text-sm text-gray-400 mb-6">
+            <p className="text-sm text-white/50 mb-6">
               Defina uma nova senha para <strong>{passwordModal.user?.name}</strong>
             </p>
 
@@ -299,7 +299,7 @@ export default function UsersPage() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-white/70 mb-2">
                   Nova Senha
                 </label>
                 <div className="relative">
@@ -307,13 +307,13 @@ export default function UsersPage() {
                     type={showPassword ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 pr-10 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+                    className="w-full px-4 py-2.5 pr-10 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                     placeholder="Mínimo 6 caracteres"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -323,7 +323,7 @@ export default function UsersPage() {
               <button
                 type="button"
                 onClick={generatePassword}
-                className="w-full px-4 py-2 text-sm text-gray-400 hover:text-white border border-gray-700 rounded-lg hover:bg-surface-hover transition-colors"
+                className="w-full px-4 py-2 text-sm text-white/50 hover:text-white border border-white/[0.08] rounded-lg hover:bg-white/[0.06] transition-colors"
               >
                 Gerar Senha Aleatória
               </button>
@@ -332,7 +332,7 @@ export default function UsersPage() {
             <div className="flex gap-3 mt-6">
               <button
                 onClick={closePasswordModal}
-                className="flex-1 px-4 py-2.5 text-gray-400 hover:text-white border border-gray-700 rounded-lg hover:bg-surface-hover transition-colors"
+                className="flex-1 px-4 py-2.5 text-white/50 hover:text-white border border-white/[0.08] rounded-lg hover:bg-white/[0.06] transition-colors"
               >
                 Cancelar
               </button>

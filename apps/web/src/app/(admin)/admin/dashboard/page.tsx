@@ -90,14 +90,14 @@ export default function AdminDashboard() {
   const { overview, recentEnrollments, topCourses } = stats;
 
   return (
-    <div>
+    <div className="space-y-8">
       <PageHeader
         title="Dashboard"
         description="Visão geral da plataforma de aprendizagem"
       />
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 stagger-children">
         <StatsCard
           title="Usuários Ativos"
           value={overview.activeUsers}
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Secondary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
         <StatsCard
           title="Badges Criados"
           value={overview.totalBadges}
@@ -146,18 +146,18 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Activity and Top Courses */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 stagger-children">
         {/* Recent Enrollments */}
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 hover:border-white/[0.12] transition-colors">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+            <h2 className="text-lg font-display font-semibold tracking-tight text-white flex items-center gap-2">
               <Clock className="w-5 h-5 text-brand-500" />
               Matrículas Recentes
             </h2>
           </div>
 
           {recentEnrollments.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
+            <p className="text-white/40 text-center py-8">
               Nenhuma matrícula recente
             </p>
           ) : (
@@ -165,9 +165,9 @@ export default function AdminDashboard() {
               {recentEnrollments.slice(0, 5).map((enrollment) => (
                 <div
                   key={enrollment.id}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-hover transition-colors"
+                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.04] transition-colors"
                 >
-                  <div className="w-10 h-10 bg-surface-hover rounded-full flex items-center justify-center text-white font-medium">
+                  <div className="w-10 h-10 bg-white/[0.06] rounded-full flex items-center justify-center text-white font-medium">
                     {enrollment.user.avatarUrl ? (
                       <img
                         src={enrollment.user.avatarUrl}
@@ -182,7 +182,7 @@ export default function AdminDashboard() {
                     <p className="text-sm font-medium text-white truncate">
                       {enrollment.user.name}
                     </p>
-                    <p className="text-xs text-gray-400 truncate">
+                    <p className="text-xs text-white/50 truncate">
                       {enrollment.course.title}
                     </p>
                   </div>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                     <p className="text-sm font-medium text-brand-500">
                       {enrollment.progress}%
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-white/40">
                       {new Date(enrollment.startedAt).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
@@ -201,16 +201,16 @@ export default function AdminDashboard() {
         </div>
 
         {/* Top Courses */}
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 hover:border-white/[0.12] transition-colors">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+            <h2 className="text-lg font-display font-semibold tracking-tight text-white flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-brand-500" />
               Cursos Mais Populares
             </h2>
           </div>
 
           {topCourses.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">
+            <p className="text-white/40 text-center py-8">
               Nenhum curso encontrado
             </p>
           ) : (
@@ -218,9 +218,9 @@ export default function AdminDashboard() {
               {topCourses.map((course, index) => (
                 <div
                   key={course.id}
-                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-surface-hover transition-colors"
+                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.04] transition-colors"
                 >
-                  <div className="w-10 h-10 bg-surface-hover rounded-lg flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 bg-white/[0.06] rounded-lg flex items-center justify-center text-white font-bold">
                     {index + 1}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
                     <p className="text-sm font-medium text-brand-500">
                       {course.enrollmentsCount}
                     </p>
-                    <p className="text-xs text-gray-500">matrículas</p>
+                    <p className="text-xs text-white/40">matrículas</p>
                   </div>
                 </div>
               ))}

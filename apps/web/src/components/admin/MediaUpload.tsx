@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Loader2, Image, Video } from 'lucide-react';
 import { api } from '@/lib/api';
+import { cn } from '@/lib/utils';
 
 interface MediaUploadProps {
   value?: string;
@@ -75,15 +76,17 @@ export function MediaUpload({
   return (
     <div className="space-y-2">
       {label && (
-        <label className="block text-sm font-medium text-gray-300">{label}</label>
+        <label className="block text-sm font-medium font-body text-white/60">
+          {label}
+        </label>
       )}
       {description && (
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm font-body text-white/30">{description}</p>
       )}
 
       {/* Preview */}
       {value && !isUploading && (
-        <div className="relative group rounded-lg overflow-hidden bg-surface-dark border border-gray-700">
+        <div className="glass relative group rounded-lg overflow-hidden border border-white/[0.06]">
           {isVideo ? (
             <video
               src={value}
@@ -100,29 +103,29 @@ export function MediaUpload({
               className="w-full h-48 object-cover"
             />
           )}
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
             <button
               type="button"
               onClick={() => inputRef.current?.click()}
-              className="px-4 py-2 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors"
+              className="px-4 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 transition-colors font-body font-medium min-h-[44px]"
             >
               Trocar
             </button>
             <button
               type="button"
               onClick={handleRemove}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              className="px-4 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors min-h-[44px]"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
           <div className="absolute top-2 left-2">
             {isVideo ? (
-              <span className="flex items-center gap-1 px-2 py-1 bg-black/50 rounded text-xs text-white">
+              <span className="flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur-sm rounded text-xs text-white/80 font-body">
                 <Video className="w-3 h-3" /> Vídeo
               </span>
             ) : (
-              <span className="flex items-center gap-1 px-2 py-1 bg-black/50 rounded text-xs text-white">
+              <span className="flex items-center gap-1 px-2 py-1 bg-black/50 backdrop-blur-sm rounded text-xs text-white/80 font-body">
                 <Image className="w-3 h-3" /> Imagem
               </span>
             )}
@@ -134,13 +137,19 @@ export function MediaUpload({
       {!value && !isUploading && (
         <div
           onClick={() => inputRef.current?.click()}
-          className="border-2 border-dashed border-gray-700 rounded-lg p-8 text-center cursor-pointer hover:border-brand-500 hover:bg-surface-hover transition-colors"
+          className={cn(
+            'glass border-2 border-dashed border-white/[0.08] rounded-lg p-8 sm:p-10 text-center cursor-pointer',
+            'hover:border-brand-500/40 hover:bg-white/[0.02] transition-all duration-200',
+            'min-h-[120px] flex flex-col items-center justify-center'
+          )}
         >
-          <Upload className="w-10 h-10 text-gray-500 mx-auto mb-3" />
-          <p className="text-gray-400">
+          <div className="w-12 h-12 rounded-full bg-white/[0.04] flex items-center justify-center mb-3">
+            <Upload className="w-5 h-5 text-white/40" />
+          </div>
+          <p className="text-white/50 font-body">
             Clique para fazer upload ou arraste o arquivo
           </p>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-white/25 font-body mt-1">
             {mediaType === 'logo' ? 'PNG, JPG ou SVG' : 'PNG, JPG, MP4 ou WebM'} (máx. {maxSize}MB)
           </p>
         </div>
@@ -148,22 +157,22 @@ export function MediaUpload({
 
       {/* Uploading State */}
       {isUploading && (
-        <div className="border border-gray-700 rounded-lg p-8 text-center">
+        <div className="glass border border-white/[0.06] rounded-lg p-8 text-center">
           <Loader2 className="w-10 h-10 text-brand-500 mx-auto mb-3 animate-spin" />
-          <p className="text-gray-400 mb-2">Enviando arquivo...</p>
-          <div className="w-full bg-surface-dark rounded-full h-2 overflow-hidden">
+          <p className="text-white/50 font-body mb-3">Enviando arquivo...</p>
+          <div className="w-full bg-white/[0.04] rounded-full h-2 overflow-hidden">
             <div
-              className="bg-brand-500 h-full transition-all duration-300"
+              className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-400 transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
             />
           </div>
-          <p className="text-sm text-gray-500 mt-2">{uploadProgress}%</p>
+          <p className="text-sm text-white/30 font-body mt-2">{uploadProgress}%</p>
         </div>
       )}
 
       {/* Error */}
       {error && (
-        <p className="text-sm text-red-500">{error}</p>
+        <p className="text-sm text-red-400 font-body">{error}</p>
       )}
 
       {/* Hidden Input */}

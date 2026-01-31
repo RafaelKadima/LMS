@@ -103,15 +103,15 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Cores do Sistema */}
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6">
-          <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6">
+          <h3 className="text-lg font-display font-medium tracking-tight text-white mb-6 flex items-center gap-2">
             <Palette className="w-5 h-5 text-brand-500" />
             Cores do Sistema
           </h3>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white/70 mb-2">
                 Cor Primária (Marca)
               </label>
               <div className="flex items-center gap-3">
@@ -119,23 +119,23 @@ export default function SettingsPage() {
                   type="color"
                   value={settings?.primaryColor || '#f97316'}
                   onChange={(e) => updateSettings({ primaryColor: e.target.value })}
-                  className="w-12 h-12 rounded-lg border border-gray-700 cursor-pointer bg-transparent"
+                  className="w-12 h-12 rounded-lg border border-white/[0.08] cursor-pointer bg-transparent"
                 />
                 <input
                   type="text"
                   value={settings?.primaryColor || '#f97316'}
                   onChange={(e) => updateSettings({ primaryColor: e.target.value })}
-                  className="flex-1 px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 font-mono"
+                  className="flex-1 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors font-mono"
                   placeholder="#f97316"
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-white/40 mt-1">
                 Usada em botões, links e elementos de destaque
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white/70 mb-2">
                 Cor Secundária (Background)
               </label>
               <div className="flex items-center gap-3">
@@ -143,24 +143,24 @@ export default function SettingsPage() {
                   type="color"
                   value={settings?.secondaryColor || '#141414'}
                   onChange={(e) => updateSettings({ secondaryColor: e.target.value })}
-                  className="w-12 h-12 rounded-lg border border-gray-700 cursor-pointer bg-transparent"
+                  className="w-12 h-12 rounded-lg border border-white/[0.08] cursor-pointer bg-transparent"
                 />
                 <input
                   type="text"
                   value={settings?.secondaryColor || '#141414'}
                   onChange={(e) => updateSettings({ secondaryColor: e.target.value })}
-                  className="flex-1 px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 font-mono"
+                  className="flex-1 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors font-mono"
                   placeholder="#141414"
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-white/40 mt-1">
                 Cor de fundo principal da plataforma
               </p>
             </div>
 
             {/* Preview das cores */}
-            <div className="p-4 rounded-lg border border-gray-700">
-              <p className="text-sm text-gray-400 mb-3">Preview:</p>
+            <div className="p-4 rounded-lg border border-white/[0.08]">
+              <p className="text-sm text-white/50 mb-3">Preview:</p>
               <div className="flex items-center gap-4">
                 <div
                   className="w-24 h-10 rounded-lg flex items-center justify-center text-white text-sm font-medium"
@@ -169,7 +169,7 @@ export default function SettingsPage() {
                   Botão
                 </div>
                 <div
-                  className="w-24 h-10 rounded-lg flex items-center justify-center text-gray-400 text-sm border border-gray-700"
+                  className="w-24 h-10 rounded-lg flex items-center justify-center text-white/50 text-sm border border-white/[0.08]"
                   style={{ backgroundColor: settings?.secondaryColor }}
                 >
                   Background
@@ -180,8 +180,8 @@ export default function SettingsPage() {
         </div>
 
         {/* Logo */}
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6">
-          <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6">
+          <h3 className="text-lg font-display font-medium tracking-tight text-white mb-6 flex items-center gap-2">
             <Image className="w-5 h-5 text-brand-500" />
             Logo da Plataforma
           </h3>
@@ -197,15 +197,15 @@ export default function SettingsPage() {
         </div>
 
         {/* Background do Login */}
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6 lg:col-span-2">
-          <h3 className="text-lg font-medium text-white mb-6 flex items-center gap-2">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 lg:col-span-2">
+          <h3 className="text-lg font-display font-medium tracking-tight text-white mb-6 flex items-center gap-2">
             <Monitor className="w-5 h-5 text-brand-500" />
             Background da Página de Login
           </h3>
 
           {/* Tipo de Background */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-300 mb-3">
+            <label className="block text-sm font-medium text-white/70 mb-3">
               Tipo de Background
             </label>
             <div className="flex gap-4">
@@ -215,11 +215,11 @@ export default function SettingsPage() {
                 className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
                   settings?.loginBgType === 'color'
                     ? 'border-brand-500 bg-brand-500/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    : 'border-white/[0.08] hover:border-white/[0.1]'
                 }`}
               >
-                <Palette className="w-6 h-6 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-300">Cor Sólida</p>
+                <Palette className="w-6 h-6 mx-auto mb-2 text-white/50" />
+                <p className="text-sm text-white/70">Cor Sólida</p>
               </button>
               <button
                 type="button"
@@ -227,11 +227,11 @@ export default function SettingsPage() {
                 className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
                   settings?.loginBgType === 'image'
                     ? 'border-brand-500 bg-brand-500/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    : 'border-white/[0.08] hover:border-white/[0.1]'
                 }`}
               >
-                <Image className="w-6 h-6 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-300">Imagem</p>
+                <Image className="w-6 h-6 mx-auto mb-2 text-white/50" />
+                <p className="text-sm text-white/70">Imagem</p>
               </button>
               <button
                 type="button"
@@ -239,11 +239,11 @@ export default function SettingsPage() {
                 className={`flex-1 p-4 rounded-lg border-2 transition-colors ${
                   settings?.loginBgType === 'video'
                     ? 'border-brand-500 bg-brand-500/10'
-                    : 'border-gray-700 hover:border-gray-600'
+                    : 'border-white/[0.08] hover:border-white/[0.1]'
                 }`}
               >
-                <Video className="w-6 h-6 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-300">Vídeo</p>
+                <Video className="w-6 h-6 mx-auto mb-2 text-white/50" />
+                <p className="text-sm text-white/70">Vídeo</p>
               </button>
             </div>
           </div>
@@ -251,7 +251,7 @@ export default function SettingsPage() {
           {/* Cor de Background (se tipo = color) */}
           {settings?.loginBgType === 'color' && (
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-white/70 mb-2">
                 Cor do Background
               </label>
               <div className="flex items-center gap-3">
@@ -259,13 +259,13 @@ export default function SettingsPage() {
                   type="color"
                   value={settings.loginBgColor || '#141414'}
                   onChange={(e) => updateSettings({ loginBgColor: e.target.value })}
-                  className="w-12 h-12 rounded-lg border border-gray-700 cursor-pointer bg-transparent"
+                  className="w-12 h-12 rounded-lg border border-white/[0.08] cursor-pointer bg-transparent"
                 />
                 <input
                   type="text"
                   value={settings.loginBgColor || '#141414'}
                   onChange={(e) => updateSettings({ loginBgColor: e.target.value })}
-                  className="w-32 px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500 font-mono"
+                  className="w-32 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors font-mono"
                   placeholder="#141414"
                 />
               </div>
@@ -292,8 +292,8 @@ export default function SettingsPage() {
           )}
 
           {/* Preview do Login */}
-          <div className="border border-gray-700 rounded-lg overflow-hidden">
-            <p className="text-sm text-gray-400 p-3 border-b border-gray-700">
+          <div className="border border-white/[0.08] rounded-lg overflow-hidden">
+            <p className="text-sm text-white/50 p-3 border-b border-white/[0.08]">
               Preview da Página de Login:
             </p>
             <div
@@ -325,11 +325,11 @@ export default function SettingsPage() {
               {/* Overlay */}
               {(settings?.loginBgType === 'image' || settings?.loginBgType === 'video') &&
                 settings?.loginBgMediaUrl && (
-                  <div className="absolute inset-0 bg-black/50" />
+                  <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
                 )}
 
               {/* Login Card Preview */}
-              <div className="relative z-10 bg-surface-card/90 backdrop-blur-sm rounded-xl p-6 w-72 border border-gray-700">
+              <div className="relative z-10 glass-strong backdrop-blur-sm rounded-xl p-6 w-72 border border-white/[0.08]">
                 {settings?.logoUrl ? (
                   <img
                     src={settings.logoUrl}
@@ -345,8 +345,8 @@ export default function SettingsPage() {
                   </div>
                 )}
                 <div className="space-y-3">
-                  <div className="h-10 bg-surface-dark rounded-lg border border-gray-700" />
-                  <div className="h-10 bg-surface-dark rounded-lg border border-gray-700" />
+                  <div className="h-10 bg-white/[0.04] rounded-lg border border-white/[0.08]" />
+                  <div className="h-10 bg-white/[0.04] rounded-lg border border-white/[0.08]" />
                   <div
                     className="h-10 rounded-lg flex items-center justify-center text-white text-sm font-medium"
                     style={{ backgroundColor: settings?.primaryColor }}
@@ -365,7 +365,7 @@ export default function SettingsPage() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors shadow-glow"
         >
           {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
           {isSaving ? 'Salvando...' : 'Salvar Configurações'}

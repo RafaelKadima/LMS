@@ -75,7 +75,7 @@ export default function FranchisesPage() {
       sortable: true,
       render: (franchise) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-surface-hover rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-white/[0.06] rounded-lg flex items-center justify-center">
             {franchise.logoUrl ? (
               <img src={franchise.logoUrl} alt={franchise.name} className="w-8 h-8 object-contain rounded" />
             ) : (
@@ -84,7 +84,7 @@ export default function FranchisesPage() {
           </div>
           <div>
             <p className="font-medium">{franchise.name}</p>
-            <p className="text-xs text-gray-500">{franchise.slug}</p>
+            <p className="text-xs text-white/40">{franchise.slug}</p>
           </div>
         </div>
       ),
@@ -93,21 +93,21 @@ export default function FranchisesPage() {
       key: 'cnpj',
       header: 'CNPJ',
       render: (franchise) => (
-        <span className="text-gray-300 font-mono text-sm">{franchise.cnpj}</span>
+        <span className="text-white/70 font-mono text-sm">{franchise.cnpj}</span>
       ),
     },
     {
       key: 'storesCount',
       header: 'Lojas',
       render: (franchise) => (
-        <span className="text-gray-300">{franchise.storesCount || 0}</span>
+        <span className="text-white/70">{franchise.storesCount || 0}</span>
       ),
     },
     {
       key: 'usersCount',
       header: 'Usuários',
       render: (franchise) => (
-        <span className="text-gray-300">{franchise.usersCount || 0}</span>
+        <span className="text-white/70">{franchise.usersCount || 0}</span>
       ),
     },
     {
@@ -152,7 +152,7 @@ export default function FranchisesPage() {
                 e.stopPropagation();
                 router.push(`/admin/franchises/${franchise.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -162,7 +162,7 @@ export default function FranchisesPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, franchise });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />

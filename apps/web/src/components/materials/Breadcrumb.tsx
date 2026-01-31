@@ -17,9 +17,9 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
     <nav className="flex items-center gap-2 text-sm">
       <Link
         href="/materials"
-        className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+        className="flex items-center gap-1.5 text-white/40 hover:text-white transition-colors"
       >
-        <Home className="w-4 h-4" />
+        <Home className="w-3.5 h-3.5" />
         <span>Materiais</span>
       </Link>
 
@@ -29,13 +29,13 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
 
         return (
           <div key={item.id} className="flex items-center gap-2">
-            <ChevronRight className="w-4 h-4 text-gray-600" />
+            <ChevronRight className="w-3.5 h-3.5 text-white/20" />
             {isLast ? (
               <span className="text-white font-medium capitalize">{displayName}</span>
             ) : (
               <Link
                 href={`/materials/${item.id}`}
-                className="text-gray-400 hover:text-white transition-colors capitalize"
+                className="text-white/40 hover:text-white transition-colors capitalize"
               >
                 {displayName}
               </Link>

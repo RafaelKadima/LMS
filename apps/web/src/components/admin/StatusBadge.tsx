@@ -1,5 +1,7 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+
 type Status = 'active' | 'inactive' | 'pending' | 'completed' | 'draft' | 'published' | 'archived';
 
 interface StatusBadgeProps {
@@ -19,27 +21,38 @@ const defaultLabels: Record<string, string> = {
   false: 'Inativo',
 };
 
-const statusColors: Record<string, string> = {
-  active: 'bg-green-500/10 text-green-500 border-green-500/20',
-  inactive: 'bg-red-500/10 text-red-500 border-red-500/20',
-  pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
-  completed: 'bg-green-500/10 text-green-500 border-green-500/20',
-  draft: 'bg-gray-500/10 text-gray-400 border-gray-500/20',
-  published: 'bg-brand-500/10 text-brand-500 border-brand-500/20',
-  archived: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
-  true: 'bg-green-500/10 text-green-500 border-green-500/20',
-  false: 'bg-red-500/10 text-red-500 border-red-500/20',
+const statusStyles: Record<string, { bg: string; text: string; dot: string }> = {
+  active:    { bg: 'bg-emerald-500/[0.08]', text: 'text-emerald-400', dot: 'bg-emerald-400' },
+  inactive:  { bg: 'bg-red-500/[0.08]', text: 'text-red-400', dot: 'bg-red-400' },
+  pending:   { bg: 'bg-amber-500/[0.08]', text: 'text-amber-400', dot: 'bg-amber-400' },
+  completed: { bg: 'bg-emerald-500/[0.08]', text: 'text-emerald-400', dot: 'bg-emerald-400' },
+  draft:     { bg: 'bg-white/[0.04]', text: 'text-white/50', dot: 'bg-white/40' },
+  published: { bg: 'bg-brand-500/[0.08]', text: 'text-brand-400', dot: 'bg-brand-400' },
+  archived:  { bg: 'bg-white/[0.04]', text: 'text-white/40', dot: 'bg-white/30' },
+  true:      { bg: 'bg-emerald-500/[0.08]', text: 'text-emerald-400', dot: 'bg-emerald-400' },
+  false:     { bg: 'bg-red-500/[0.08]', text: 'text-red-400', dot: 'bg-red-400' },
+  scheduled: { bg: 'bg-blue-500/[0.08]', text: 'text-blue-400', dot: 'bg-blue-400' },
+  live:      { bg: 'bg-emerald-500/[0.08]', text: 'text-emerald-400', dot: 'bg-emerald-400' },
+  ended:     { bg: 'bg-white/[0.04]', text: 'text-white/40', dot: 'bg-white/30' },
+  cancelled: { bg: 'bg-red-500/[0.08]', text: 'text-red-400', dot: 'bg-red-400' },
 };
+
+const defaultStyle = { bg: 'bg-white/[0.04]', text: 'text-white/50', dot: 'bg-white/40' };
 
 export function StatusBadge({ status, labels = {} }: StatusBadgeProps) {
   const statusKey = String(status);
   const label = labels[statusKey] || defaultLabels[statusKey] || statusKey;
-  const colorClass = statusColors[statusKey] || 'bg-gray-500/10 text-gray-400 border-gray-500/20';
+  const style = statusStyles[statusKey] || defaultStyle;
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border ${colorClass}`}
+      className={cn(
+        'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium font-body border border-white/[0.06]',
+        style.bg,
+        style.text
+      )}
     >
+      <span className={cn('w-1.5 h-1.5 rounded-full', style.dot)} />
       {label}
     </span>
   );

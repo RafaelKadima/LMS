@@ -8,8 +8,23 @@ const handler = NextAuth({
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Senha', type: 'password' },
+        webauthnToken: { label: 'WebAuthn Token', type: 'text' },
       },
       async authorize(credentials) {
+        // WebAuthn flow: frontend already authenticated with backend
+        if (credentials?.webauthnToken) {
+          try {
+            const user = JSON.parse(credentials.webauthnToken);
+            if (user?.accessToken && user?.id) {
+              return user;
+            }
+            return null;
+          } catch {
+            return null;
+          }
+        }
+
+        // Password flow
         if (!credentials?.email || !credentials?.password) {
           return null;
         }

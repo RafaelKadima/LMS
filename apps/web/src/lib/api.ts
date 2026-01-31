@@ -405,6 +405,152 @@ export const api = {
     },
   },
 
+  // =====================
+  // Notifications
+  // =====================
+  notifications: {
+    getAll: async (params?: { page?: number; perPage?: number }) => {
+      const { data } = await apiClient.get('/notifications', { params });
+      return data;
+    },
+    getUnreadCount: async () => {
+      const { data } = await apiClient.get('/notifications/unread-count');
+      return data;
+    },
+    markRead: async (id: string) => {
+      const { data } = await apiClient.put(`/notifications/${id}/read`);
+      return data;
+    },
+    markAllRead: async () => {
+      const { data } = await apiClient.put('/notifications/read-all');
+      return data;
+    },
+  },
+
+  // =====================
+  // Meetings
+  // =====================
+  meetings: {
+    getAll: async (filter?: 'upcoming' | 'past') => {
+      const { data } = await apiClient.get('/meetings', { params: filter ? { filter } : {} });
+      return data;
+    },
+    getOne: async (id: string) => {
+      const { data } = await apiClient.get(`/meetings/${id}`);
+      return data;
+    },
+    create: async (payload: any) => {
+      const { data } = await apiClient.post('/meetings', payload);
+      return data;
+    },
+    update: async (id: string, payload: any) => {
+      const { data } = await apiClient.put(`/meetings/${id}`, payload);
+      return data;
+    },
+    delete: async (id: string) => {
+      const { data } = await apiClient.delete(`/meetings/${id}`);
+      return data;
+    },
+    respond: async (id: string, response: 'accepted' | 'declined') => {
+      const { data } = await apiClient.post(`/meetings/${id}/respond`, { response });
+      return data;
+    },
+    join: async (id: string) => {
+      const { data } = await apiClient.post(`/meetings/${id}/join`);
+      return data;
+    },
+    leave: async (id: string) => {
+      const { data } = await apiClient.post(`/meetings/${id}/leave`);
+      return data;
+    },
+    start: async (id: string) => {
+      const { data } = await apiClient.post(`/meetings/${id}/start`);
+      return data;
+    },
+    end: async (id: string) => {
+      const { data } = await apiClient.post(`/meetings/${id}/end`);
+      return data;
+    },
+    // Admin
+    getAllAdmin: async (params?: { page?: number; perPage?: number; search?: string }) => {
+      const { data } = await apiClient.get('/meetings/admin', { params });
+      return data;
+    },
+  },
+
+  // =====================
+  // Engagement (Face Detection)
+  // =====================
+  engagement: {
+    sendEvent: async (payload: {
+      type: string;
+      timestamp: string;
+      videoTime?: number;
+      courseId: string;
+      lessonId: string;
+      metadata?: Record<string, any>;
+    }) => {
+      const { data } = await apiClient.post('/engagement/events', payload);
+      return data;
+    },
+
+    sendBatch: async (events: Array<{
+      type: string;
+      timestamp: string;
+      videoTime?: number;
+      courseId: string;
+      lessonId: string;
+      metadata?: Record<string, any>;
+    }>) => {
+      const { data } = await apiClient.post('/engagement/events/batch', { events });
+      return data;
+    },
+
+    getReport: async (userId: string, courseId: string) => {
+      const { data } = await apiClient.get(`/engagement/report/${userId}/${courseId}`);
+      return data;
+    },
+
+    getLessonReport: async (userId: string, lessonId: string) => {
+      const { data } = await apiClient.get(`/engagement/report/${userId}/lesson/${lessonId}`);
+      return data;
+    },
+  },
+
+  // =====================
+  // WebAuthn / Passkeys
+  // =====================
+  webauthn: {
+    getRegistrationOptions: async () => {
+      const { data } = await apiClient.post('/webauthn/register/options');
+      return data;
+    },
+    verifyRegistration: async (response: any, deviceName?: string) => {
+      const { data } = await apiClient.post('/webauthn/register/verify', { response, deviceName });
+      return data;
+    },
+    getAuthenticationOptions: async (email?: string) => {
+      const { data } = await apiClient.post('/webauthn/authenticate/options', { email });
+      return data;
+    },
+    verifyAuthentication: async (sessionId: string, response: any) => {
+      const { data } = await apiClient.post('/webauthn/authenticate/verify', { sessionId, response });
+      return data;
+    },
+    listCredentials: async () => {
+      const { data } = await apiClient.get('/webauthn/credentials');
+      return data;
+    },
+    deleteCredential: async (id: string) => {
+      const { data } = await apiClient.delete(`/webauthn/credentials/${id}`);
+      return data;
+    },
+    renameCredential: async (id: string, deviceName: string) => {
+      const { data } = await apiClient.patch(`/webauthn/credentials/${id}`, { deviceName });
+      return data;
+    },
+  },
+
   // Settings (público - para página de login)
   getPublicSettings: async () => {
     const { data } = await apiClient.get('/settings');
@@ -462,11 +608,12 @@ export const api = {
     },
 
     // Fetch file as blob for preview (authenticated)
-    getFileBlob: async (fileId: string): Promise<string> => {
+    getFileBlob: async (fileId: string, mimeType?: string): Promise<string> => {
       const response = await apiClient.get(`/drive/files/${fileId}/stream`, {
         responseType: 'blob',
       });
-      const blob = new Blob([response.data]);
+      const contentType = mimeType || response.headers['content-type'] || 'application/octet-stream';
+      const blob = new Blob([response.data], { type: contentType });
       return window.URL.createObjectURL(blob);
     },
 

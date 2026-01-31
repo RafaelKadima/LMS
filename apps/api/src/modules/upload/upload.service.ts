@@ -30,6 +30,7 @@ export class UploadService {
         accessKeyId: this.configService.get<string>('R2_ACCESS_KEY') || '',
         secretAccessKey: this.configService.get<string>('R2_SECRET_KEY') || '',
       },
+      forcePathStyle: true,
     });
 
     this.bucket = this.configService.get<string>('R2_BUCKET') || 'motochefe-videos';

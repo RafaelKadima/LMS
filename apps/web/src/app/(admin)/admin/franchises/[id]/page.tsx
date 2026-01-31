@@ -117,7 +117,7 @@ export default function FranchiseFormPage() {
       >
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 px-4 py-2.5 text-gray-400 hover:text-white transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 text-white/50 hover:text-white transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
           Voltar
@@ -125,7 +125,7 @@ export default function FranchiseFormPage() {
       </PageHeader>
 
       <form onSubmit={handleSubmit} className="max-w-2xl">
-        <div className="bg-surface-card rounded-xl border border-gray-800 p-6 space-y-6">
+        <div className="glass rounded-2xl border border-white/[0.06] p-6 space-y-6">
           {error && (
             <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
               {error}
@@ -133,49 +133,49 @@ export default function FranchiseFormPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Nome *</label>
+            <label className="block text-sm font-medium text-white/70 mb-2">Nome *</label>
             <input
               type="text"
               value={form.name}
               onChange={(e) => handleNameChange(e.target.value)}
               required
-              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
               placeholder="MotoChefe Franquias"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">CNPJ *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">CNPJ *</label>
               <input
                 type="text"
                 value={form.cnpj}
                 onChange={(e) => setForm({ ...form, cnpj: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white font-mono focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white font-mono placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="00.000.000/0000-00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Slug *</label>
+              <label className="block text-sm font-medium text-white/70 mb-2">Slug *</label>
               <input
                 type="text"
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
                 required
-                className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white font-mono focus:outline-none focus:border-brand-500"
+                className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white font-mono placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
                 placeholder="motochefe-franquias"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">URL do Logo</label>
+            <label className="block text-sm font-medium text-white/70 mb-2">URL do Logo</label>
             <input
               type="url"
               value={form.logoUrl}
               onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
-              className="w-full px-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white focus:outline-none focus:border-brand-500"
+              className="w-full px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/30 transition-colors"
               placeholder="https://..."
             />
           </div>
@@ -186,16 +186,16 @@ export default function FranchiseFormPage() {
               id="isActive"
               checked={form.isActive}
               onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-              className="w-4 h-4 rounded border-gray-700 bg-surface-dark text-brand-500"
+              className="w-4 h-4 rounded border-white/[0.08] bg-white/[0.04] text-brand-500"
             />
-            <label htmlFor="isActive" className="text-sm text-gray-300">Franquia ativa</label>
+            <label htmlFor="isActive" className="text-sm text-white/70">Franquia ativa</label>
           </div>
 
-          <div className="flex items-center gap-4 pt-4 border-t border-gray-800">
+          <div className="flex items-center gap-4 pt-4 border-t border-white/[0.06]">
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-lg hover:bg-brand-600 font-medium disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2.5 bg-brand-500 text-white rounded-xl hover:bg-brand-600 font-medium disabled:opacity-50 transition-colors shadow-glow"
             >
               {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
               {isSaving ? 'Salvando...' : 'Salvar'}
@@ -203,7 +203,7 @@ export default function FranchiseFormPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2.5 text-gray-400 hover:text-white transition-colors"
+              className="px-6 py-2.5 text-white/50 hover:text-white transition-colors"
             >
               Cancelar
             </button>

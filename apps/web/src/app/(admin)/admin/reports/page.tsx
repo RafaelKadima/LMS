@@ -75,9 +75,9 @@ function formatDuration(seconds: number): string {
 
 function ProgressBar({ value, className = '' }: { value: number; className?: string }) {
   return (
-    <div className={`h-2 bg-gray-700 rounded-full overflow-hidden ${className}`}>
+    <div className={`h-2 bg-white/[0.08] rounded-full overflow-hidden ${className}`}>
       <div
-        className="h-full bg-brand-500 rounded-full transition-all"
+        className="h-full bg-gradient-to-r from-brand-500 to-brand-400 rounded-full transition-all"
         style={{ width: `${Math.min(100, value)}%` }}
       />
     </div>
@@ -86,15 +86,15 @@ function ProgressBar({ value, className = '' }: { value: number; className?: str
 
 function StatsCard({ icon: Icon, label, value, subtext }: { icon: any; label: string; value: string | number; subtext?: string }) {
   return (
-    <div className="bg-surface-card rounded-xl p-6 border border-gray-800">
+    <div className="glass rounded-2xl p-6 border border-white/[0.06]">
       <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-lg bg-brand-500/10 flex items-center justify-center">
           <Icon className="w-6 h-6 text-brand-500" />
         </div>
         <div>
-          <p className="text-sm text-gray-400">{label}</p>
-          <p className="text-2xl font-bold text-white">{value}</p>
-          {subtext && <p className="text-xs text-gray-500">{subtext}</p>}
+          <p className="text-sm text-white/50">{label}</p>
+          <p className="text-2xl font-display font-bold tracking-tight text-white">{value}</p>
+          {subtext && <p className="text-xs text-white/40">{subtext}</p>}
         </div>
       </div>
     </div>
@@ -164,7 +164,7 @@ export default function ReportsPage() {
       />
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <StatsCard
           icon={Users}
           label="Total de Usuários"
@@ -186,17 +186,17 @@ export default function ReportsPage() {
       </div>
 
       {/* Data Table */}
-      <div className="bg-surface-card rounded-xl border border-gray-800 overflow-hidden">
+      <div className="glass rounded-2xl border border-white/[0.06] overflow-hidden">
         {/* Search */}
-        <form onSubmit={handleSearch} className="p-4 border-b border-gray-800">
+        <form onSubmit={handleSearch} className="p-4 border-b border-white/[0.06]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
             <input
               type="text"
               placeholder="Buscar por nome ou email..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-surface-dark border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-brand-500 transition-colors"
             />
           </div>
         </form>
@@ -205,21 +205,21 @@ export default function ReportsPage() {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-800">
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400 w-10"></th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Usuário</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Cargo</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Franquia/Loja</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Cursos</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Progresso</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Tempo Assistido</th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-400">Última Atividade</th>
+              <tr className="border-b border-white/[0.06]">
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50 w-10"></th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Usuário</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Cargo</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Franquia/Loja</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Cursos</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Progresso</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Tempo Assistido</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-white/50">Última Atividade</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-gray-500">
+                  <td colSpan={8} className="px-4 py-12 text-center text-white/40">
                     <div className="flex items-center justify-center gap-2">
                       <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-brand-500"></div>
                       <span>Carregando...</span>
@@ -228,7 +228,7 @@ export default function ReportsPage() {
                 </tr>
               ) : data.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-4 py-12 text-center text-gray-500">
+                  <td colSpan={8} className="px-4 py-12 text-center text-white/40">
                     Nenhum usuário com matrícula encontrado
                   </td>
                 </tr>
@@ -239,58 +239,58 @@ export default function ReportsPage() {
                     <tr
                       key={item.user.id}
                       onClick={() => toggleRow(item.user.id)}
-                      className="border-b border-gray-800 cursor-pointer hover:bg-surface-hover transition-colors"
+                      className="border-b border-white/[0.06] cursor-pointer hover:bg-white/[0.06] transition-colors"
                     >
                       <td className="px-4 py-4">
-                        <button className="p-1 rounded hover:bg-surface-hover transition-colors">
+                        <button className="p-1 rounded hover:bg-white/[0.06] transition-colors">
                           {expandedRows.has(item.user.id) ? (
-                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                            <ChevronDown className="w-4 h-4 text-white/50" />
                           ) : (
-                            <ChevronRight className="w-4 h-4 text-gray-400" />
+                            <ChevronRight className="w-4 h-4 text-white/50" />
                           )}
                         </button>
                       </td>
                       <td className="px-4 py-4">
                         <div>
                           <p className="font-medium text-white">{item.user.name}</p>
-                          <p className="text-xs text-gray-500">{item.user.email}</p>
+                          <p className="text-xs text-white/40">{item.user.email}</p>
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <span className="text-gray-300">{cargoLabels[item.user.cargo] || item.user.cargo}</span>
+                        <span className="text-white/70">{cargoLabels[item.user.cargo] || item.user.cargo}</span>
                       </td>
                       <td className="px-4 py-4">
                         <div className="text-sm">
-                          <p className="text-gray-300">{item.user.franchise?.name || '-'}</p>
+                          <p className="text-white/70">{item.user.franchise?.name || '-'}</p>
                           {item.user.store && (
-                            <p className="text-xs text-gray-500">{item.user.store.name}</p>
+                            <p className="text-xs text-white/40">{item.user.store.name}</p>
                           )}
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="text-center">
                           <span className="text-brand-500 font-medium">{item.coursesCompleted}</span>
-                          <span className="text-gray-500"> / {item.coursesEnrolled}</span>
-                          <p className="text-xs text-gray-500">concluídos</p>
+                          <span className="text-white/40"> / {item.coursesEnrolled}</span>
+                          <p className="text-xs text-white/40">concluídos</p>
                         </div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="w-32">
                           <div className="flex justify-between text-sm mb-1">
-                            <span className="text-gray-400">Média</span>
+                            <span className="text-white/50">Média</span>
                             <span className="text-white font-medium">{Math.round(item.overallProgress)}%</span>
                           </div>
                           <ProgressBar value={item.overallProgress} />
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="flex items-center gap-2 text-gray-300">
-                          <Clock className="w-4 h-4 text-gray-500" />
+                        <div className="flex items-center gap-2 text-white/70">
+                          <Clock className="w-4 h-4 text-white/40" />
                           {formatDuration(item.totalSecondsWatched)}
                         </div>
                       </td>
                       <td className="px-4 py-4">
-                        <span className="text-gray-400 text-sm">
+                        <span className="text-white/50 text-sm">
                           {item.lastActivityAt
                             ? new Date(item.lastActivityAt).toLocaleDateString('pt-BR', {
                                 day: '2-digit',
@@ -307,23 +307,23 @@ export default function ReportsPage() {
                     {/* Expanded Row */}
                     {expandedRows.has(item.user.id) && (
                       <tr key={`${item.user.id}-expanded`}>
-                        <td colSpan={8} className="px-6 py-4 bg-surface-hover/50">
+                        <td colSpan={8} className="px-6 py-4 bg-white/[0.06]/50">
                           <div className="space-y-3">
-                            <p className="text-sm font-medium text-gray-300 mb-3">
+                            <p className="text-sm font-medium text-white/70 mb-3">
                               Detalhes dos cursos matriculados:
                             </p>
                             {item.enrollments.length === 0 ? (
-                              <p className="text-gray-500 text-sm">Nenhuma matrícula encontrada</p>
+                              <p className="text-white/40 text-sm">Nenhuma matrícula encontrada</p>
                             ) : (
                               <div className="grid gap-3">
                                 {item.enrollments.map((enrollment) => (
                                   <div
                                     key={enrollment.courseId}
-                                    className="flex items-center justify-between p-3 bg-surface-card rounded-lg border border-gray-800"
+                                    className="flex items-center justify-between p-3 glass rounded-xl border border-white/[0.06]"
                                   >
                                     <div className="flex-1">
                                       <p className="font-medium text-white">{enrollment.courseTitle}</p>
-                                      <p className="text-xs text-gray-500">
+                                      <p className="text-xs text-white/40">
                                         Iniciado em {new Date(enrollment.startedAt).toLocaleDateString('pt-BR')}
                                         {enrollment.completedAt && (
                                           <> • Concluído em {new Date(enrollment.completedAt).toLocaleDateString('pt-BR')}</>
@@ -335,11 +335,11 @@ export default function ReportsPage() {
                                         <p className="text-sm font-medium text-white">
                                           {enrollment.completedLessons}/{enrollment.totalLessons}
                                         </p>
-                                        <p className="text-xs text-gray-500">aulas</p>
+                                        <p className="text-xs text-white/40">aulas</p>
                                       </div>
                                       <div className="w-24">
                                         <div className="flex justify-between text-xs mb-1">
-                                          <span className="text-gray-500">Progresso</span>
+                                          <span className="text-white/40">Progresso</span>
                                           <span className={enrollment.progress === 100 ? 'text-green-500' : 'text-white'}>
                                             {Math.round(enrollment.progress)}%
                                           </span>
@@ -373,8 +373,8 @@ export default function ReportsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-4 py-3 border-t border-gray-800 flex items-center justify-between">
-            <p className="text-sm text-gray-400">
+          <div className="px-4 py-3 border-t border-white/[0.06] flex items-center justify-between">
+            <p className="text-sm text-white/50">
               Mostrando {(meta.page - 1) * meta.perPage + 1} -{' '}
               {Math.min(meta.page * meta.perPage, meta.total)} de {meta.total}
             </p>
@@ -383,33 +383,33 @@ export default function ReportsPage() {
               <button
                 onClick={() => fetchReports(1)}
                 disabled={meta.page === 1}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronsLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={() => fetchReports(meta.page - 1)}
                 disabled={meta.page === 1}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <span className="px-3 py-1 text-sm text-gray-400">
+              <span className="px-3 py-1 text-sm text-white/50">
                 {meta.page} / {totalPages}
               </span>
 
               <button
                 onClick={() => fetchReports(meta.page + 1)}
                 disabled={meta.page === totalPages}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => fetchReports(totalPages)}
                 disabled={meta.page === totalPages}
-                className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <ChevronsRight className="w-4 h-4" />
               </button>

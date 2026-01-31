@@ -7,7 +7,7 @@ function hexToRgb(hex: string): string {
   if (result) {
     return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
   }
-  return '20, 20, 20';
+  return '249, 115, 22';
 }
 
 function adjustBrightness(hex: string, percent: number): string {
@@ -33,12 +33,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
         if (settings.primaryColor) {
           root.style.setProperty('--color-brand', settings.primaryColor);
+          root.style.setProperty('--color-brand-rgb', hexToRgb(settings.primaryColor));
         }
 
         if (settings.secondaryColor) {
           root.style.setProperty('--color-surface-dark', settings.secondaryColor);
-          root.style.setProperty('--color-surface-card', adjustBrightness(settings.secondaryColor, 15));
-          root.style.setProperty('--color-surface-hover', adjustBrightness(settings.secondaryColor, 25));
+          root.style.setProperty('--color-surface-card', adjustBrightness(settings.secondaryColor, 8));
+          root.style.setProperty('--color-surface-hover', adjustBrightness(settings.secondaryColor, 16));
+          root.style.setProperty('--color-surface-elevated', adjustBrightness(settings.secondaryColor, 12));
           const rgb = hexToRgb(settings.secondaryColor);
           root.style.setProperty('--background-start-rgb', rgb);
           root.style.setProperty('--background-end-rgb', rgb);

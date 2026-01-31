@@ -13,10 +13,6 @@ export class AuthService {
   async login(email: string, password: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: {
-        franchise: true,
-        store: true,
-      },
     });
 
     if (!user) {
@@ -31,6 +27,26 @@ export class AuthService {
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Email ou senha invalidos');
+    }
+
+    return this.generateTokenForUser(user.id);
+  }
+
+  async generateTokenForUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        franchise: true,
+        store: true,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario nao encontrado');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Usuario desativado');
     }
 
     const payload = {

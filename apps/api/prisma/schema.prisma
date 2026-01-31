@@ -62,6 +62,41 @@ enum XAPIEventStatus {
   failed
 }
 
+enum MeetingType {
+  meeting
+  seminar
+  training
+}
+
+enum MeetingStatus {
+  scheduled
+  live
+  ended
+  cancelled
+}
+
+enum MeetingScope {
+  broadcast
+  franchise
+  store
+  manual
+}
+
+enum ParticipantStatus {
+  invited
+  accepted
+  declined
+  attended
+}
+
+enum NotificationType {
+  meeting_invite
+  meeting_reminder
+  meeting_started
+  meeting_cancelled
+  system
+}
+
 // ===========================================
 // Franchise & Store
 // ===========================================
@@ -76,10 +111,11 @@ model Franchise {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stores  Store[]
-  users   User[]
-  courses Course[]
-  tracks  Track[]
+  stores   Store[]
+  users    User[]
+  courses  Course[]
+  tracks   Track[]
+  meetings Meeting[]
 
   @@map("franchises")
 }
@@ -97,6 +133,7 @@ model Store {
 
   franchise Franchise @relation(fields: [franchiseId], references: [id])
   users     User[]
+  meetings  Meeting[]
 
   @@index([franchiseId])
   @@map("stores")
@@ -120,16 +157,38 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
-  franchise      Franchise?       @relation(fields: [franchiseId], references: [id])
-  store          Store?           @relation(fields: [storeId], references: [id])
-  enrollments    Enrollment[]
-  lessonProgress LessonProgress[]
-  badgeAwards    BadgeAward[]
-  xapiEvents     XAPIEvent[]
+  franchise               Franchise?           @relation(fields: [franchiseId], references: [id])
+  store                   Store?               @relation(fields: [storeId], references: [id])
+  enrollments             Enrollment[]
+  lessonProgress          LessonProgress[]
+  badgeAwards             BadgeAward[]
+  xapiEvents              XAPIEvent[]
+  meetingsCreated         Meeting[]            @relation("MeetingsCreated")
+  meetingParticipations   MeetingParticipant[]
+  notifications           Notification[]
+  engagementEvents        EngagementEvent[]
+  webauthnCredentials     WebAuthnCredential[]
 
   @@index([franchiseId])
   @@index([storeId])
   @@map("users")
+}
+
+model WebAuthnCredential {
+  id                  String    @id @default(uuid())
+  userId              String    @map("user_id")
+  credentialId        String    @unique @map("credential_id")
+  credentialPublicKey Bytes     @map("credential_public_key")
+  counter             BigInt    @default(0)
+  transports          String[]  @default([])
+  deviceName          String?   @map("device_name")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  lastUsedAt          DateTime? @map("last_used_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("webauthn_credentials")
 }
 
 // ===========================================
@@ -197,8 +256,9 @@ model Lesson {
   createdAt        DateTime               @default(now()) @map("created_at")
   updatedAt        DateTime               @updatedAt @map("updated_at")
 
-  module   Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress LessonProgress[]
+  module           Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress         LessonProgress[]
+  engagementEvents EngagementEvent[]
 
   @@index([moduleId])
   @@map("lessons")
@@ -383,4 +443,100 @@ model SystemSettings {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@map("system_settings")
+}
+
+// ===========================================
+// Meetings & Seminars
+// ===========================================
+
+model Meeting {
+  id              String        @id @default(uuid())
+  title           String
+  description     String?
+  type            MeetingType   @default(meeting)
+  status          MeetingStatus @default(scheduled)
+  scheduledAt     DateTime      @map("scheduled_at")
+  durationMinutes Int           @default(60) @map("duration_minutes")
+  jitsiRoomName   String        @unique @map("jitsi_room_name")
+
+  scope           MeetingScope  @default(broadcast)
+  franchiseId     String?       @map("franchise_id")
+  storeId         String?       @map("store_id")
+  createdById     String        @map("created_by_id")
+
+  isRecurring     Boolean       @default(false) @map("is_recurring")
+  recurrenceRule  String?       @map("recurrence_rule")
+
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  createdBy       User          @relation("MeetingsCreated", fields: [createdById], references: [id])
+  franchise       Franchise?    @relation(fields: [franchiseId], references: [id])
+  store           Store?        @relation(fields: [storeId], references: [id])
+  participants    MeetingParticipant[]
+
+  @@index([scheduledAt])
+  @@index([status])
+  @@index([createdById])
+  @@map("meetings")
+}
+
+model MeetingParticipant {
+  id        String            @id @default(uuid())
+  meetingId String            @map("meeting_id")
+  userId    String            @map("user_id")
+  status    ParticipantStatus @default(invited)
+  joinedAt  DateTime?         @map("joined_at")
+  leftAt    DateTime?         @map("left_at")
+
+  meeting   Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, userId])
+  @@index([userId])
+  @@map("meeting_participants")
+}
+
+// ===========================================
+// Notifications
+// ===========================================
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+// ===========================================
+// Engagement Events (Face Detection)
+// ===========================================
+
+model EngagementEvent {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  courseId        String   @map("course_id")
+  lessonId        String   @map("lesson_id")
+  eventType      String   @map("event_type")
+  videoTime      Float?   @map("video_time")
+  metadata       Json?
+  eventTimestamp DateTime @map("event_timestamp")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([userId, courseId, lessonId])
+  @@index([eventType])
+  @@map("engagement_events")
 }

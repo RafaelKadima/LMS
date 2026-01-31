@@ -2,6 +2,7 @@
 
 import { Download, Eye } from 'lucide-react';
 import { FileTypeIcon, getFileTypeLabel, formatFileSize } from './FileTypeIcon';
+import { cn } from '@/lib/utils';
 
 interface FileCardProps {
   id: string;
@@ -39,9 +40,14 @@ export function FileCard({
     : null;
 
   return (
-    <div className="group bg-surface-card rounded-xl border border-gray-800 hover:border-gray-700 transition-all overflow-hidden">
+    <div
+      className={cn(
+        'group bg-surface-card rounded-xl border border-white/[0.06]',
+        'hover:border-white/[0.12] transition-all duration-200 overflow-hidden'
+      )}
+    >
       {/* Thumbnail or Icon */}
-      <div className="relative h-32 bg-surface-dark flex items-center justify-center">
+      <div className="relative h-32 rounded-t-xl overflow-hidden bg-surface-dark flex items-center justify-center">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
@@ -53,11 +59,20 @@ export function FileCard({
         )}
 
         {/* Hover Actions */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <div
+          className={cn(
+            'absolute inset-0 bg-black/60 backdrop-blur-sm',
+            'opacity-0 group-hover:opacity-100 transition-opacity duration-200',
+            'flex items-center justify-center gap-2'
+          )}
+        >
           {canPreview && onPreview && (
             <button
               onClick={onPreview}
-              className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+              className={cn(
+                'p-2 bg-white/10 backdrop-blur-md rounded-xl',
+                'hover:bg-white/20 transition-colors'
+              )}
               title="Visualizar"
             >
               <Eye className="w-5 h-5 text-white" />
@@ -66,7 +81,10 @@ export function FileCard({
           {onDownload && (
             <button
               onClick={onDownload}
-              className="p-2 bg-brand-500 rounded-lg hover:bg-brand-600 transition-colors"
+              className={cn(
+                'p-2 bg-brand-500/90 backdrop-blur-md rounded-xl',
+                'hover:bg-brand-500 transition-colors'
+              )}
               title="Baixar"
             >
               <Download className="w-5 h-5 text-white" />
@@ -77,16 +95,19 @@ export function FileCard({
 
       {/* Info */}
       <div className="p-4">
-        <h4 className="text-sm font-medium text-white truncate" title={name}>
+        <h4
+          className="font-body text-sm font-medium text-white/90 truncate"
+          title={name}
+        >
           {name}
         </h4>
 
-        <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-          <span className="px-2 py-0.5 bg-surface-hover rounded text-gray-400">
+        <div className="flex items-center gap-2 mt-2 text-xs text-white/40">
+          <span className="px-2 py-0.5 bg-white/[0.06] rounded-md font-body text-white/50">
             {getFileTypeLabel(mimeType)}
           </span>
-          {size && <span>{formatFileSize(size)}</span>}
-          {formattedDate && <span>• {formattedDate}</span>}
+          {size && <span className="font-body">{formatFileSize(size)}</span>}
+          {formattedDate && <span className="font-body">• {formattedDate}</span>}
         </div>
       </div>
     </div>

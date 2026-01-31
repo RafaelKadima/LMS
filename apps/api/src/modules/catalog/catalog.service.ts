@@ -53,9 +53,11 @@ export class CatalogService {
         where,
         include: {
           modules: {
+            orderBy: { order: 'asc' },
             include: {
               lessons: {
-                select: { id: true },
+                select: { id: true, videoUrl: true, thumbnailUrl: true },
+                orderBy: { order: 'asc' },
               },
             },
           },
@@ -71,18 +73,25 @@ export class CatalogService {
       this.prisma.course.count({ where }),
     ]);
 
-    const data = courses.map((course) => ({
-      id: course.id,
-      title: course.title,
-      description: course.description,
-      thumbnailUrl: course.thumbnailUrl,
-      durationMinutes: course.durationMinutes,
-      lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
-      isRequired: course.isRequired,
-      targetCargos: course.targetCargos,
-      progress: course.enrollments[0]?.progress || 0,
-      status: course.enrollments[0]?.status || null,
-    }));
+    const data = courses.map((course) => {
+      // Fallback: usar thumbnail ou videoUrl da primeira aula como capa do curso
+      const firstLesson = course.modules.flatMap(m => m.lessons)[0];
+      const autoThumbnail = firstLesson?.thumbnailUrl || firstLesson?.videoUrl || null;
+
+      return {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        thumbnailUrl: course.thumbnailUrl || autoThumbnail,
+        videoUrl: firstLesson?.videoUrl || null,
+        durationMinutes: course.durationMinutes,
+        lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
+        isRequired: course.isRequired,
+        targetCargos: course.targetCargos,
+        progress: course.enrollments[0]?.progress || 0,
+        status: course.enrollments[0]?.status || null,
+      };
+    });
 
     return {
       data,
@@ -159,8 +168,12 @@ export class CatalogService {
       where,
       include: {
         modules: {
+          orderBy: { order: 'asc' },
           include: {
-            lessons: { select: { id: true } },
+            lessons: {
+              select: { id: true, videoUrl: true, thumbnailUrl: true },
+              orderBy: { order: 'asc' },
+            },
           },
         },
         enrollments: {
@@ -171,17 +184,23 @@ export class CatalogService {
       orderBy: { order: 'asc' },
     });
 
-    return courses.map((course) => ({
-      id: course.id,
-      title: course.title,
-      description: course.description,
-      thumbnailUrl: course.thumbnailUrl,
-      durationMinutes: course.durationMinutes,
-      lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
-      progress: course.enrollments[0]?.progress || 0,
-      completed: course.enrollments[0]?.status === 'completed',
-      completedAt: course.enrollments[0]?.completedAt,
-    }));
+    return courses.map((course) => {
+      const firstLesson = course.modules.flatMap(m => m.lessons)[0];
+      const autoThumbnail = firstLesson?.thumbnailUrl || firstLesson?.videoUrl || null;
+
+      return {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        thumbnailUrl: course.thumbnailUrl || autoThumbnail,
+        videoUrl: firstLesson?.videoUrl || null,
+        durationMinutes: course.durationMinutes,
+        lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
+        progress: course.enrollments[0]?.progress || 0,
+        completed: course.enrollments[0]?.status === 'completed',
+        completedAt: course.enrollments[0]?.completedAt,
+      };
+    });
   }
 
   async getRecommended(user: any) {
@@ -212,8 +231,12 @@ export class CatalogService {
       where,
       include: {
         modules: {
+          orderBy: { order: 'asc' },
           include: {
-            lessons: { select: { id: true } },
+            lessons: {
+              select: { id: true, videoUrl: true, thumbnailUrl: true },
+              orderBy: { order: 'asc' },
+            },
           },
         },
       },
@@ -221,13 +244,18 @@ export class CatalogService {
       take: 10,
     });
 
-    return courses.map((course) => ({
-      id: course.id,
-      title: course.title,
-      description: course.description,
-      thumbnailUrl: course.thumbnailUrl,
-      durationMinutes: course.durationMinutes,
-      lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
-    }));
+    return courses.map((course) => {
+      const firstLesson = course.modules.flatMap(m => m.lessons)[0];
+      const autoThumbnail = firstLesson?.thumbnailUrl || firstLesson?.videoUrl || null;
+
+      return {
+        id: course.id,
+        title: course.title,
+        description: course.description,
+        thumbnailUrl: course.thumbnailUrl || autoThumbnail,
+        durationMinutes: course.durationMinutes,
+        lessonsCount: course.modules.reduce((acc, m) => acc + m.lessons.length, 0),
+      };
+    });
   }
 }

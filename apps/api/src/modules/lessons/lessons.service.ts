@@ -72,15 +72,26 @@ export class LessonsService {
   }
 
   async create(dto: CreateLessonDto) {
-    return this.prisma.lesson.create({
-      data: dto,
-    });
+    // Remove null/undefined values to avoid Prisma validation errors
+    const data: Record<string, any> = {};
+    for (const [key, value] of Object.entries(dto)) {
+      if (value != null) {
+        data[key] = value;
+      }
+    }
+    return this.prisma.lesson.create({ data: data as any });
   }
 
   async update(id: string, dto: UpdateLessonDto) {
+    const data: Record<string, any> = {};
+    for (const [key, value] of Object.entries(dto)) {
+      if (value !== undefined) {
+        data[key] = value;
+      }
+    }
     return this.prisma.lesson.update({
       where: { id },
-      data: dto,
+      data: data as any,
     });
   }
 

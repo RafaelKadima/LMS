@@ -24,6 +24,10 @@ import { GamificationModule } from './modules/gamification/gamification.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { ReportsModule } from './modules/admin/reports/reports.module';
 import { DriveModule } from './modules/drive/drive.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
+import { MeetingsModule } from './modules/meetings/meetings.module';
+import { EngagementModule } from './modules/engagement/engagement.module';
+import { WebAuthnModule } from './modules/webauthn/webauthn.module';
 
 @Module({
   imports: [
@@ -81,6 +85,10 @@ import { DriveModule } from './modules/drive/drive.module';
     SettingsModule,
     ReportsModule,
     DriveModule,
+    NotificationsModule,
+    MeetingsModule,
+    EngagementModule,
+    WebAuthnModule,
   ],
 })
 export class AppModule {}

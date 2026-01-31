@@ -64,12 +64,12 @@ export default function StoresPage() {
       sortable: true,
       render: (store) => (
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-surface-hover rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-white/[0.06] rounded-lg flex items-center justify-center">
             <Store className="w-5 h-5 text-brand-500" />
           </div>
           <div>
             <p className="font-medium">{store.name}</p>
-            <p className="text-xs text-gray-500">{store.city}{store.state ? `, ${store.state}` : ''}</p>
+            <p className="text-xs text-white/40">{store.city}{store.state ? `, ${store.state}` : ''}</p>
           </div>
         </div>
       ),
@@ -78,21 +78,21 @@ export default function StoresPage() {
       key: 'franchise',
       header: 'Franquia',
       render: (store) => (
-        <span className="text-gray-300">{store.franchise?.name || '-'}</span>
+        <span className="text-white/70">{store.franchise?.name || '-'}</span>
       ),
     },
     {
       key: 'address',
       header: 'Endereço',
       render: (store) => (
-        <span className="text-gray-400 text-sm truncate max-w-xs block">{store.address || '-'}</span>
+        <span className="text-white/50 text-sm truncate max-w-xs block">{store.address || '-'}</span>
       ),
     },
     {
       key: 'usersCount',
       header: 'Usuários',
       render: (store) => (
-        <span className="text-gray-300">{store.usersCount || 0}</span>
+        <span className="text-white/70">{store.usersCount || 0}</span>
       ),
     },
     {
@@ -137,7 +137,7 @@ export default function StoresPage() {
                 e.stopPropagation();
                 router.push(`/admin/stores/${store.id}`);
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Editar"
             >
               <Pencil className="w-4 h-4" />
@@ -147,7 +147,7 @@ export default function StoresPage() {
                 e.stopPropagation();
                 setDeleteModal({ isOpen: true, store });
               }}
-              className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-surface-hover transition-colors"
+              className="p-2 rounded-lg text-white/50 hover:text-red-500 hover:bg-white/[0.06] transition-colors"
               title="Excluir"
             >
               <Trash2 className="w-4 h-4" />
